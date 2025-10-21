@@ -31,8 +31,9 @@ const config = {
       config: {
         calendars: [
           {
+            fetchInterval: 7 * 24 * 60 * 60 * 1000,
             symbol: "calendar-check",
-            url: "webcal://www.calendarlabs.com/ical-calendar/ics/76/US_Holidays.ics"
+            url: "https://ics.calendarlabs.com/76/mm3137/US_Holidays.ics"
           }
         ]
       }
@@ -42,21 +43,24 @@ const config = {
       position: "lower_third"
     },
     {
-      module: "currentweather",
+      module: "weather",
       position: "top_right",
       config: {
-        location: "New York",
-        locationID: "", // Set to OpenWeather location ID if preferred
-        appid: "YOUR_OPENWEATHER_API_KEY"
+        weatherProvider: "openmeteo",
+        type: "current",
+        lat: 40.776676,
+        lon: -73.971321
       }
     },
     {
-      module: "weatherforecast",
+      module: "weather",
       position: "top_right",
+      header: "Weather Forecast",
       config: {
-        location: "New York",
-        locationID: "",
-        appid: "YOUR_OPENWEATHER_API_KEY"
+        weatherProvider: "openmeteo",
+        type: "forecast",
+        lat: 40.776676,
+        lon: -73.971321
       }
     },
     {

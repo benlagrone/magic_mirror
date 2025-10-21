@@ -13,25 +13,13 @@ Create the external network once if it does not already exist:
 docker network create fortress-phronesis-net
 ```
 
-## Build the image
-
-```bash
-docker compose build
-```
-
-The build clones the latest MagicMirror² source, installs dependencies, and copies the local `config/config.js` into the image. Adjust the build by supplying alternative repository details:
-
-```bash
-docker compose build --build-arg MAGICMIRROR_BRANCH=develop
-```
-
 ## Run Magic Mirror
 
 ```bash
 docker compose up -d
 ```
 
-The service listens on port `8081` inside the container and is published to `8081` on the host. Visit `http://localhost:8081` to view the dashboard.
+The Compose file pulls the prebuilt [`karsten13/magicmirror`](https://gitlab.com/khassel/magicmirror) image and mounts the local `config` directory. The service listens on port `8081` inside the container and is published to `8081` on the host. Visit `http://localhost:8081` to view the dashboard.
 
 Logs can be tailed with:
 
@@ -44,4 +32,4 @@ docker compose logs -f
 - Update `config/config.js` before rebuilding to modify modules, locations, or API keys.
 - Mount additional modules by extending `docker-compose.yml` with extra bind volumes (e.g., `./modules:/opt/magic_mirror/modules`).
 
-Redeploy changes with `docker compose up -d --build`.
+Redeploy changes with `docker compose up -d`.

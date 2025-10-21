@@ -1,14 +1,16 @@
 services:
   magic-mirror:
     container_name: magic-mirror
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: karsten13/magicmirror:latest
     restart: unless-stopped
+    command: ["node", "--run", "server"]
     ports:
       - "8081:8081"
     volumes:
-      - ./config:/opt/magic_mirror/config:ro
+      - ./config:/opt/magic_mirror/config:rw
+    environment:
+      MM_SCENARIO: server
+      MM_OVERRIDE_DEFAULT_MODULES: "true"
     networks:
       - fortress-phronesis-net
 
