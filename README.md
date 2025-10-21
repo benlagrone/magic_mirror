@@ -31,7 +31,7 @@ docker compose build --build-arg MAGICMIRROR_BRANCH=develop
 docker compose up -d
 ```
 
-The service listens on port `8080` inside the container and is published to `8080` on the host. Visit `http://localhost:8080` to view the dashboard.
+The service listens on port `8081` inside the container and is published to `8081` on the host. Visit `http://localhost:8081` to view the dashboard.
 
 Logs can be tailed with:
 

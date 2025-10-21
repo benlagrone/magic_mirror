@@ -1,4 +1,4 @@
-FROM node:20-bullseye
+FROM node:22-bookworm
 
 ARG MAGICMIRROR_REPO=https://github.com/MichMich/MagicMirror.git
 ARG MAGICMIRROR_BRANCH=master
@@ -19,7 +19,7 @@ WORKDIR $MAGICMIRROR_DIR
 
 COPY --chown=node:node config ./config
 
-EXPOSE 8080
+EXPOSE 8081
 
 USER node
 
