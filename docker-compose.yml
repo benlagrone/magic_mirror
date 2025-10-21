@@ -1,0 +1,18 @@
+services:
+  magic-mirror:
+    container_name: magic-mirror
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config:/opt/magic_mirror/config:ro
+    networks:
+      - fortress-phronesis-net
+
+networks:
+  fortress-phronesis-net:
+    external: true
+    name: fortress-phronesis-net
