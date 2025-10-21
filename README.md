@@ -30,6 +30,7 @@ docker compose logs -f
 ## Customizing the dashboard
 
 - Update `config/config.js` before rebuilding to modify modules, locations, or API keys.
-- Mount additional modules by extending `docker-compose.yml` with extra bind volumes (e.g., `./modules:/opt/magic_mirror/modules`).
+- Third-party modules are vendored under `modules/` (e.g., `MMM-Dad-Jokes`, `MMM-SolarPicture`, `MMM-PreciousMetals`). After cloning new modules, add matching bind mounts in `docker-compose.yml` and run `docker compose run --rm magic-mirror npm install --prefix modules/<ModuleName>` when a module ships a `package.json`.
+- `MMM-PreciousMetals` requires a [metals.dev](https://metals.dev) API key. Set it via `config/config.js`.
 
 Redeploy changes with `docker compose up -d`.

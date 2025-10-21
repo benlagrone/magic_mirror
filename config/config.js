@@ -22,7 +22,10 @@ let config = {
     },
     {
       module: "clock",
-      position: "top_left"
+      position: "top_left",
+      config: {
+      "timezone":"America/Chicago"
+      }
     },
     {
       module: "calendar",
@@ -48,8 +51,8 @@ let config = {
       config: {
         weatherProvider: "openmeteo",
         type: "current",
-        lat: 40.776676,
-        lon: -73.971321
+        lat: 29.777764,
+        lon: -95.5262739
       }
     },
     {
@@ -59,8 +62,8 @@ let config = {
       config: {
         weatherProvider: "openmeteo",
         type: "forecast",
-        lat: 40.776676,
-        lon: -73.971321
+        lat: 29.777764,
+        lon: -95.5262739
       }
     },
     {
@@ -77,6 +80,36 @@ let config = {
         showPublishDate: true,
         broadcastNewsFeeds: true,
         broadcastNewsUpdates: true
+      }
+    },
+    {
+      module: "MMM-Dad-Jokes",
+      position: "bottom_left",
+      config: {
+        updateInterval: 30 * 60 * 1000,
+        fadeSpeed: 4 * 1000,
+        fontSize: "1.7rem",
+        textAlign: "left"
+      }
+    },
+    {
+      module: "MMM-SolarPicture",
+      position: "middle_center",
+      config: {
+        imageType: "AIA 304",
+        updateInterval: 60 * 60 * 1000,
+        maxMediaWidth: 400,
+        maxMediaHeight: 400
+      }
+    },
+    {
+      module: "MMM-PreciousMetals",
+      header: "Precious Metals",
+      position: "top_center",
+      config: {
+        apiKey: "YOUR_METALS_DEV_API_KEY",
+        metals: ["gold", "silver"],
+        updateInterval: 3 * 60 * 60 * 1000
       }
     }
   ]
