@@ -84,7 +84,7 @@ let config = {
     },
     {
       module: "MMM-Dad-Jokes",
-      position: "bottom_left",
+      position: "bottom_right",
       config: {
         updateInterval: 30 * 60 * 1000,
         fadeSpeed: 4 * 1000,
@@ -114,13 +114,13 @@ let config = {
     },
     {
       module: "MMM-SolomonicPrayerClock",
-      position: "bottom_right",
+      position: "bottom_left",
       config: {
         latitude: 29.7604,
         longitude: -95.3698,
         theme: "expanded",
         showSigils: true,
-        showUpcoming: true,
+        showUpcoming: false,
         psalmDisplayMode: "cycle",
         focusAreas: ["wisdom", "wealth", "health", "influence"],
         locale: "en"
