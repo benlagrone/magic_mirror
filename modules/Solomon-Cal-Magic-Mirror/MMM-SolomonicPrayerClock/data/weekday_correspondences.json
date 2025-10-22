@@ -30,7 +30,35 @@
         "translation": "KJV"
       }
     },
-    "psalms": ["Psalm 23", "Psalm 84", "Psalm 113"],
+    "psalms": [
+      {
+        "reference": "Psalm 23:1",
+        "request": {
+          "book": "Psalm",
+          "chapter": "23",
+          "verse": "1",
+          "translation": "KJV"
+        }
+      },
+      {
+        "reference": "Psalm 84:11",
+        "request": {
+          "book": "Psalm",
+          "chapter": "84",
+          "verse": "11",
+          "translation": "KJV"
+        }
+      },
+      {
+        "reference": "Psalm 113:3",
+        "request": {
+          "book": "Psalm",
+          "chapter": "113",
+          "verse": "3",
+          "translation": "KJV"
+        }
+      }
+    ],
     "focusAreas": ["influence", "wisdom"]
   },
   "monday": {
@@ -64,7 +92,35 @@
         "translation": "KJV"
       }
     },
-    "psalms": ["Psalm 27", "Psalm 121", "Psalm 29"],
+    "psalms": [
+      {
+        "reference": "Psalm 27:1",
+        "request": {
+          "book": "Psalm",
+          "chapter": "27",
+          "verse": "1",
+          "translation": "KJV"
+        }
+      },
+      {
+        "reference": "Psalm 121:3",
+        "request": {
+          "book": "Psalm",
+          "chapter": "121",
+          "verse": "3",
+          "translation": "KJV"
+        }
+      },
+      {
+        "reference": "Psalm 29:11",
+        "request": {
+          "book": "Psalm",
+          "chapter": "29",
+          "verse": "11",
+          "translation": "KJV"
+        }
+      }
+    ],
     "focusAreas": ["health", "wisdom"]
   },
   "tuesday": {
@@ -98,7 +154,35 @@
         "translation": "KJV"
       }
     },
-    "psalms": ["Psalm 18", "Psalm 32", "Psalm 140"],
+    "psalms": [
+      {
+        "reference": "Psalm 18:2",
+        "request": {
+          "book": "Psalm",
+          "chapter": "18",
+          "verse": "2",
+          "translation": "KJV"
+        }
+      },
+      {
+        "reference": "Psalm 32:7",
+        "request": {
+          "book": "Psalm",
+          "chapter": "32",
+          "verse": "7",
+          "translation": "KJV"
+        }
+      },
+      {
+        "reference": "Psalm 140:1",
+        "request": {
+          "book": "Psalm",
+          "chapter": "140",
+          "verse": "1",
+          "translation": "KJV"
+        }
+      }
+    ],
     "focusAreas": ["health", "influence"]
   },
   "wednesday": {
@@ -132,7 +216,35 @@
         "translation": "KJV"
       }
     },
-    "psalms": ["Psalm 19", "Psalm 119", "Psalm 147"],
+    "psalms": [
+      {
+        "reference": "Psalm 19:7",
+        "request": {
+          "book": "Psalm",
+          "chapter": "19",
+          "verse": "7",
+          "translation": "KJV"
+        }
+      },
+      {
+        "reference": "Psalm 119:97",
+        "request": {
+          "book": "Psalm",
+          "chapter": "119",
+          "verse": "97",
+          "translation": "KJV"
+        }
+      },
+      {
+        "reference": "Psalm 147:5",
+        "request": {
+          "book": "Psalm",
+          "chapter": "147",
+          "verse": "5",
+          "translation": "KJV"
+        }
+      }
+    ],
     "focusAreas": ["wisdom"]
   },
   "thursday": {
@@ -166,7 +278,35 @@
         "translation": "KJV"
       }
     },
-    "psalms": ["Psalm 112", "Psalm 145", "Psalm 24"],
+    "psalms": [
+      {
+        "reference": "Psalm 112:3",
+        "request": {
+          "book": "Psalm",
+          "chapter": "112",
+          "verse": "3",
+          "translation": "KJV"
+        }
+      },
+      {
+        "reference": "Psalm 145:16",
+        "request": {
+          "book": "Psalm",
+          "chapter": "145",
+          "verse": "16",
+          "translation": "KJV"
+        }
+      },
+      {
+        "reference": "Psalm 24:5",
+        "request": {
+          "book": "Psalm",
+          "chapter": "24",
+          "verse": "5",
+          "translation": "KJV"
+        }
+      }
+    ],
     "focusAreas": ["wealth", "influence"]
   },
   "friday": {
@@ -200,7 +340,35 @@
         "translation": "KJV"
       }
     },
-    "psalms": ["Psalm 45", "Psalm 85", "Psalm 103"],
+    "psalms": [
+      {
+        "reference": "Psalm 45:7",
+        "request": {
+          "book": "Psalm",
+          "chapter": "45",
+          "verse": "7",
+          "translation": "KJV"
+        }
+      },
+      {
+        "reference": "Psalm 85:8",
+        "request": {
+          "book": "Psalm",
+          "chapter": "85",
+          "verse": "8",
+          "translation": "KJV"
+        }
+      },
+      {
+        "reference": "Psalm 103:17",
+        "request": {
+          "book": "Psalm",
+          "chapter": "103",
+          "verse": "17",
+          "translation": "KJV"
+        }
+      }
+    ],
     "focusAreas": ["health", "wealth"]
   },
   "saturday": {
@@ -234,7 +402,35 @@
         "translation": "KJV"
       }
     },
-    "psalms": ["Psalm 15", "Psalm 94", "Psalm 130"],
+    "psalms": [
+      {
+        "reference": "Psalm 15:2",
+        "request": {
+          "book": "Psalm",
+          "chapter": "15",
+          "verse": "2",
+          "translation": "KJV"
+        }
+      },
+      {
+        "reference": "Psalm 94:12",
+        "request": {
+          "book": "Psalm",
+          "chapter": "94",
+          "verse": "12",
+          "translation": "KJV"
+        }
+      },
+      {
+        "reference": "Psalm 130:5",
+        "request": {
+          "book": "Psalm",
+          "chapter": "130",
+          "verse": "5",
+          "translation": "KJV"
+        }
+      }
+    ],
     "focusAreas": ["wisdom", "health"]
   }
 }

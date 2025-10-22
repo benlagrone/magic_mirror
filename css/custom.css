@@ -1,0 +1,4 @@
+/* Override MagicMirror's default cursor hiding */
+body {
+  cursor: auto !important;
+}

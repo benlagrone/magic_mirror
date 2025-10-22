@@ -51,6 +51,7 @@ module.exports = NodeHelper.create({
     this.sigilManifestByFile = {};
     this.sigilManifestByAngel = {};
     this.verseCache = new Map();
+    this.chapterCache = new Map();
     Object.keys(this.sigilManifest).forEach((key) => {
       const entry = this.sigilManifest[key];
       if (!entry) {
@@ -84,6 +85,22 @@ module.exports = NodeHelper.create({
         })
         .catch((error) => {
           this.sendError(`Failed to load focus mapping: ${error.message}`);
+        });
+    } else if (notification === "SPC_FETCH_CHAPTER") {
+      const requestId = payload?.requestId;
+      const request = payload?.request;
+      this.fetchChapter(request)
+        .then((result) => {
+          this.sendSocketNotification("SPC_CHAPTER_RESULT", {
+            requestId,
+            ...result
+          });
+        })
+        .catch((error) => {
+          this.sendSocketNotification("SPC_CHAPTER_RESULT", {
+            requestId,
+            error: error.message || String(error)
+          });
         });
     }
   },
@@ -155,11 +172,12 @@ module.exports = NodeHelper.create({
       this.lastBroadcastHourIndex = currentHour.index;
     }
 
-    const [decoratedCurrent, decoratedNext, dayVerse, dayProverb] = await Promise.all([
+    const [decoratedCurrent, decoratedNext, dayVerse, dayProverb, dayPsalms] = await Promise.all([
       this.decorateHour(currentHour, focusAreas, isNewHour),
       this.decorateHour(nextHour, focusAreas, false),
       this.fetchCitation(dayInfo.dayVerse, dayInfo.dayVerse?.reference || "Day Verse"),
-      this.fetchCitation(dayInfo.proverb, dayInfo.proverb?.reference || "Proverb")
+      this.fetchCitation(dayInfo.proverb, dayInfo.proverb?.reference || "Proverb"),
+      this.fetchCitationList(dayInfo.psalms, "Psalm")
     ]);
 
     dayInfo.dayVerse = dayVerse || null;
@@ -168,6 +186,7 @@ module.exports = NodeHelper.create({
     } else {
       delete dayInfo.proverb;
     }
+    dayInfo.psalms = Array.isArray(dayPsalms) ? dayPsalms : [];
 
     return {
       generatedAt: now,
@@ -262,14 +281,16 @@ module.exports = NodeHelper.create({
     if (typeof citation === "string") {
       return {
         reference: fallbackReference || "",
-        text: sanitizeText(citation)
+        text: sanitizeText(citation),
+        request: null
       };
     }
 
     if (citation.text || citation.snippet) {
       return {
         reference: citation.reference || citation.ref || fallbackReference || "",
-        text: sanitizeText(citation.text || citation.snippet)
+        text: sanitizeText(citation.text || citation.snippet),
+        request: citation.request || null
       };
     }
 
@@ -293,7 +314,8 @@ module.exports = NodeHelper.create({
       const cached = this.verseCache.get(cacheKey);
       return {
         reference: citation.reference || citation.ref || cached.reference || fallbackReference || "",
-        text: cached.text
+        text: cached.text,
+        request: cached.request
       };
     }
 
@@ -330,7 +352,8 @@ module.exports = NodeHelper.create({
 
       const result = {
         reference,
-        text: textContent
+        text: textContent,
+        request: normalizedRequest
       };
 
       this.verseCache.set(cacheKey, result);
@@ -345,8 +368,78 @@ module.exports = NodeHelper.create({
           citation.ref ||
           fallbackReference ||
           `${normalizedRequest.book} ${normalizedRequest.chapter}:${normalizedRequest.verse}`,
-        text: "[Verse unavailable]"
+        text: "[Verse unavailable]",
+        request: normalizedRequest
       };
+    }
+  },
+
+  async fetchCitationList(list, fallbackLabel) {
+    if (!Array.isArray(list) || list.length === 0) {
+      return [];
+    }
+    const tasks = list.map((entry, index) => {
+      const fallback =
+        typeof entry === "string"
+          ? entry
+          : entry?.reference || entry?.ref || `${fallbackLabel || "Reading"} ${index + 1}`;
+      return this.fetchCitation(entry, fallback);
+    });
+
+    const results = await Promise.all(tasks);
+    return results.filter(Boolean);
+  },
+
+  async fetchChapter(request) {
+    if (!request || !request.book || !request.chapter) {
+      throw new Error("Invalid chapter request.");
+    }
+
+    const normalizedRequest = {
+      book: String(request.book).trim(),
+      chapter: String(request.chapter).trim(),
+      translation: request.translation || this.verseTranslation || "KJV"
+    };
+
+    const cacheKey = JSON.stringify(normalizedRequest);
+    if (this.chapterCache.has(cacheKey)) {
+      return { ...this.chapterCache.get(cacheKey) };
+    }
+
+    const body = JSON.stringify(normalizedRequest);
+
+    try {
+      const response = await fetchWithFallback(this.verseServiceUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const raw = await response.text();
+      const payload = parseVerseResponse(raw);
+      const text = (payload?.text || "").trim();
+
+      const result = {
+        reference:
+          payload?.reference ||
+          `${normalizedRequest.book} ${normalizedRequest.chapter}`,
+        text,
+        translation: payload?.translation_name || normalizedRequest.translation
+      };
+
+      this.chapterCache.set(cacheKey, result);
+      return { ...result };
+    } catch (error) {
+      throw new Error(
+        `Unable to load chapter ${normalizedRequest.book} ${normalizedRequest.chapter}: ${error.message}`
+      );
     }
   },
 

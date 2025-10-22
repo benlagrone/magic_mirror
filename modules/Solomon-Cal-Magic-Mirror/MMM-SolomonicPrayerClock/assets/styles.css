@@ -45,6 +45,92 @@
   color: #c8f0d0;
 }
 
+.spc-citation-link {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.spc-citation-group {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.spc-citation {
+  padding-left: 12px;
+}
+
+.spc-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.spc-modal-overlay.hidden {
+  display: none;
+}
+
+.spc-modal-content {
+  position: relative;
+  max-width: 80vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: rgba(24, 24, 24, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 18px 20px;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+.spc-modal-title {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.spc-modal-translation {
+  font-size: 0.85em;
+  color: #a0a0ff;
+  margin-bottom: 10px;
+}
+
+.spc-modal-body {
+  font-size: 0.95em;
+  line-height: 1.6;
+}
+
+.spc-modal-body p {
+  margin: 0 0 8px;
+}
+
+.spc-modal-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.spc-modal-close:hover {
+  color: #ff6666;
+}
+
+.spc-modal-error {
+  color: #ff8080;
+}
+
+.spc-modal-loading {
+  color: #ccccff;
+}
+
 .spc-sigil {
   display: flex;
   justify-content: center;

@@ -27,6 +27,12 @@ Module.register("MMM-SolomonicPrayerClock", {
     this.payload = null;
     this.rotationIndex = 0;
     this.rotationTimer = null;
+    this.modalOverlay = null;
+    this.modalContent = null;
+    this.modalTitle = null;
+    this.modalBody = null;
+    this.modalTranslation = null;
+    this.activeChapterRequests = {};
     this.views = ["day", "current"];
     if (this.config.showUpcoming) {
       this.views.push("next");
@@ -54,6 +60,9 @@ Module.register("MMM-SolomonicPrayerClock", {
         this.loaded = false;
         this.error = payload;
         this.updateDom();
+        break;
+      case "SPC_CHAPTER_RESULT":
+        this.handleChapterResult(payload);
         break;
       default:
         break;
@@ -140,14 +149,11 @@ Module.register("MMM-SolomonicPrayerClock", {
     const metalLine = this.renderAttributeLine("Metal", planetDetails.metal);
     const stoneLine = this.renderAttributeLine("Stone", planetDetails.stone);
     const seasonalLine = this.renderAttributeLine("Seasonal Focus", planetDetails.seasonalFocus);
-    const psalmLine = this.renderAttributeLine(
-      "Psalms",
-      Array.isArray(day.psalms) ? day.psalms.join(", ") : null
-    );
     const focusLine = this.renderAttributeLine(
       "Focus Areas",
       Array.isArray(day.focusAreas) ? day.focusAreas.join(", ") : null
     );
+    const psalmGroup = this.renderCitationList("Psalms", day.psalms);
 
     container.appendChild(header);
     container.appendChild(angelLine);
@@ -170,26 +176,26 @@ Module.register("MMM-SolomonicPrayerClock", {
     if (seasonalLine) {
       container.appendChild(seasonalLine);
     }
-    if (psalmLine) {
-      container.appendChild(psalmLine);
+    if (psalmGroup) {
+      container.appendChild(psalmGroup);
     }
     if (focusLine) {
       container.appendChild(focusLine);
     }
-    const dayVerse = this.normaliseCitation(day.dayVerse, "Day Verse");
-    if (dayVerse && dayVerse.snippet) {
-      const verse = document.createElement("div");
-      verse.className = "spc-verse";
-      verse.innerHTML = `<span class="ref">${dayVerse.ref}</span> – ${dayVerse.snippet}`;
-      container.appendChild(verse);
+    const dayVerseNode = this.createCitationElement(
+      this.normaliseCitation(day.dayVerse, "Day Verse"),
+      "spc-verse"
+    );
+    if (dayVerseNode) {
+      container.appendChild(dayVerseNode);
     }
 
-    const dayProverb = this.normaliseCitation(day.proverb, "Proverb");
-    if (dayProverb && dayProverb.snippet) {
-      const proverb = document.createElement("div");
-      proverb.className = "spc-verse spc-proverb";
-      proverb.innerHTML = `<span class="ref">${dayProverb.ref}</span> – ${dayProverb.snippet}`;
-      container.appendChild(proverb);
+    const dayProverbNode = this.createCitationElement(
+      this.normaliseCitation(day.proverb, "Proverb"),
+      "spc-verse spc-proverb"
+    );
+    if (dayProverbNode) {
+      container.appendChild(dayProverbNode);
     }
 
     if (this.config.showSigils) {
@@ -252,20 +258,20 @@ Module.register("MMM-SolomonicPrayerClock", {
     if (spiritLine) {
       container.appendChild(spiritLine);
     }
-    const hourVerse = this.normaliseCitation(hour.verse, "Verse");
-    if (hourVerse && hourVerse.snippet) {
-      const verse = document.createElement("div");
-      verse.className = "spc-verse";
-      verse.innerHTML = `<span class="ref">${hourVerse.ref}</span> – ${hourVerse.snippet}`;
-      container.appendChild(verse);
+    const hourVerseNode = this.createCitationElement(
+      this.normaliseCitation(hour.verse, "Verse"),
+      "spc-verse"
+    );
+    if (hourVerseNode) {
+      container.appendChild(hourVerseNode);
     }
 
-    const hourProverb = this.normaliseCitation(hour.proverb, "Proverb");
-    if (hourProverb && hourProverb.snippet) {
-      const proverb = document.createElement("div");
-      proverb.className = "spc-verse spc-proverb";
-      proverb.innerHTML = `<span class="ref">${hourProverb.ref}</span> – ${hourProverb.snippet}`;
-      container.appendChild(proverb);
+    const hourProverbNode = this.createCitationElement(
+      this.normaliseCitation(hour.proverb, "Proverb"),
+      "spc-verse spc-proverb"
+    );
+    if (hourProverbNode) {
+      container.appendChild(hourProverbNode);
     }
 
     if (hour.declaration) {
@@ -305,6 +311,58 @@ Module.register("MMM-SolomonicPrayerClock", {
     line.className = "spc-line";
     line.innerHTML = `<span class="label">${label}:</span> ${value}`;
     return line;
+  },
+
+  renderCitationList(label, items) {
+    if (!Array.isArray(items) || items.length === 0) {
+      return null;
+    }
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "spc-citation-group";
+
+    const header = document.createElement("div");
+    header.className = "spc-line";
+    header.innerHTML = `<span class="label">${label}:</span>`;
+    wrapper.appendChild(header);
+
+    items.forEach((item) => {
+      const normalized = this.normaliseCitation(item, label);
+      if (!normalized || !normalized.snippet) {
+        return;
+      }
+      const entry = this.createCitationElement(normalized, "spc-verse spc-citation");
+      if (entry) {
+        wrapper.appendChild(entry);
+      }
+    });
+
+    if (wrapper.children.length <= 1) {
+      return null;
+    }
+
+    return wrapper;
+  },
+
+  createCitationElement(citation, className) {
+    if (!citation || !citation.snippet) {
+      return null;
+    }
+    const container = document.createElement("div");
+    container.className = className || "spc-verse";
+
+    const ref = document.createElement("span");
+    ref.className = "ref";
+    ref.textContent = citation.ref || "";
+
+    if (this.canRequestChapter(citation)) {
+      ref.classList.add("spc-citation-link");
+      ref.addEventListener("click", () => this.openChapterModal(citation));
+    }
+
+    container.appendChild(ref);
+    container.appendChild(document.createTextNode(` – ${citation.snippet}`));
+    return container;
   },
 
   renderSigil(sigil, fallbackAlt) {
@@ -354,12 +412,176 @@ Module.register("MMM-SolomonicPrayerClock", {
     if (typeof entry === "string") {
       return {
         ref: fallbackRef || "",
-        snippet: entry
+        snippet: entry,
+        request: null
       };
     }
     return {
       ref: entry.reference || entry.ref || fallbackRef || "",
-      snippet: entry.text || entry.snippet || ""
+      snippet: entry.text || entry.snippet || "",
+      request: entry.request || null
     };
+  },
+
+  canRequestChapter(citation) {
+    const request = citation?.request;
+    return (
+      !!this.config.verseServiceUrl &&
+      request &&
+      request.book &&
+      request.chapter
+    );
+  },
+
+  openChapterModal(citation) {
+    if (!this.canRequestChapter(citation)) {
+      return;
+    }
+
+    const request = citation.request;
+    const chapterRequest = {
+      book: request.book,
+      chapter: request.chapter,
+      translation: request.translation || this.config.verseTranslation || "KJV"
+    };
+
+    this.activeChapterRequests = {};
+    const requestId = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    this.activeChapterRequests[requestId] = {
+      reference: citation.ref || `${chapterRequest.book} ${chapterRequest.chapter}`
+    };
+
+    this.showChapterModal({
+      reference: citation.ref,
+      translation: chapterRequest.translation,
+      text: "Loading chapter…",
+      loading: true
+    });
+
+    this.sendSocketNotification("SPC_FETCH_CHAPTER", {
+      requestId,
+      request: chapterRequest
+    });
+  },
+
+  ensureModal() {
+    if (this.modalOverlay) {
+      return;
+    }
+
+    const overlay = document.createElement("div");
+    overlay.className = "spc-modal-overlay hidden";
+    overlay.addEventListener("click", (event) => {
+      if (event.target === overlay) {
+        this.closeChapterModal();
+      }
+    });
+
+    const content = document.createElement("div");
+    content.className = "spc-modal-content";
+
+    const close = document.createElement("button");
+    close.className = "spc-modal-close";
+    close.type = "button";
+    close.textContent = "×";
+    close.addEventListener("click", () => this.closeChapterModal());
+
+    const title = document.createElement("div");
+    title.className = "spc-modal-title";
+
+    const translation = document.createElement("div");
+    translation.className = "spc-modal-translation";
+
+    const body = document.createElement("div");
+    body.className = "spc-modal-body";
+
+    content.appendChild(close);
+    content.appendChild(title);
+    content.appendChild(translation);
+    content.appendChild(body);
+    overlay.appendChild(content);
+    document.body.appendChild(overlay);
+
+    this.modalOverlay = overlay;
+    this.modalContent = content;
+    this.modalTitle = title;
+    this.modalBody = body;
+    this.modalTranslation = translation;
+  },
+
+  showChapterModal({ reference, text, translation, error, loading }) {
+    this.ensureModal();
+    if (!this.modalOverlay) {
+      return;
+    }
+
+    this.modalOverlay.classList.remove("hidden");
+    const titleText = reference || "Chapter";
+    this.modalTitle.textContent = titleText;
+    this.modalTranslation.textContent = translation ? `Translation: ${translation}` : "";
+
+    this.modalBody.textContent = "";
+    if (error) {
+      const errorNode = document.createElement("div");
+      errorNode.className = "spc-modal-error";
+      errorNode.textContent = error;
+      this.modalBody.appendChild(errorNode);
+      return;
+    }
+
+    if (loading) {
+      const loadingNode = document.createElement("div");
+      loadingNode.className = "spc-modal-loading";
+      loadingNode.textContent = text || "Loading…";
+      this.modalBody.appendChild(loadingNode);
+      return;
+    }
+
+    const formatted = this.formatChapterText(text);
+    formatted.forEach((paragraph) => {
+      const p = document.createElement("p");
+      p.textContent = paragraph;
+      this.modalBody.appendChild(p);
+    });
+  },
+
+  closeChapterModal() {
+    if (this.modalOverlay) {
+      this.modalOverlay.classList.add("hidden");
+    }
+    this.activeChapterRequests = {};
+  },
+
+  handleChapterResult(payload) {
+    const requestId = payload?.requestId;
+    if (!requestId || !this.activeChapterRequests[requestId]) {
+      return;
+    }
+    const pending = this.activeChapterRequests[requestId];
+    delete this.activeChapterRequests[requestId];
+
+    if (payload?.error) {
+      this.showChapterModal({
+        reference: pending.reference,
+        error: payload.error
+      });
+      return;
+    }
+
+    this.showChapterModal({
+      reference: payload.reference || pending.reference,
+      translation: payload.translation,
+      text: payload.text
+    });
+  },
+
+  formatChapterText(text) {
+    if (!text) {
+      return ["No text available."];
+    }
+    return text
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0);
   }
 });

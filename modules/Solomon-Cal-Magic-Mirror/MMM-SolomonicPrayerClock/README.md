@@ -7,6 +7,7 @@ MagicMirror² module that renders a Solomonic prayer clock aligning biblical wis
 - Shows the current weekday with associated planet, archangel, divine name, and devotional theme.
 - Calculates live planetary hours using SunCalc based on configured latitude and longitude.
 - Surfaces hourly scripture references (rotating through `wisdom`, `wealth`, `health`, `influence`) and fetches verse text from a configurable Bible service.
+- Tap any scripture reference to open the full chapter in an inline modal.
 - Displays upcoming hour preview to help the user prepare.
 - Optional sigil display by dropping images into `assets/sigils/{angel}.png`.
 
