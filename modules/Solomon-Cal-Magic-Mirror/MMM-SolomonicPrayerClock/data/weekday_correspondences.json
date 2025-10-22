@@ -13,12 +13,22 @@
     "stone": "Amber",
     "keywords": ["Leadership", "Favor", "Light"],
     "dayVerse": {
-      "ref": "Psalm 84:11",
-      "snippet": "The Lord God is a sun and shield; the Lord bestows favor and honor."
+      "reference": "Psalm 84:11",
+      "request": {
+        "book": "Psalm",
+        "chapter": "84",
+        "verse": "11",
+        "translation": "KJV"
+      }
     },
     "proverb": {
-      "ref": "Proverbs 16:3",
-      "snippet": "Commit to the Lord whatever you do, and he will establish your plans."
+      "reference": "Proverbs 16:3",
+      "request": {
+        "book": "Proverbs",
+        "chapter": "16",
+        "verse": "3",
+        "translation": "KJV"
+      }
     },
     "psalms": ["Psalm 23", "Psalm 84", "Psalm 113"],
     "focusAreas": ["influence", "wisdom"]
@@ -37,12 +47,22 @@
     "stone": "Pearl",
     "keywords": ["Compassion", "Dreams", "Protection"],
     "dayVerse": {
-      "ref": "Psalm 63:6",
-      "snippet": "On my bed I remember you; I think of you through the watches of the night."
+      "reference": "Psalm 63:6",
+      "request": {
+        "book": "Psalm",
+        "chapter": "63",
+        "verse": "6",
+        "translation": "KJV"
+      }
     },
     "proverb": {
-      "ref": "Proverbs 3:24",
-      "snippet": "When you lie down, you will not be afraid; when you lie down, your sleep will be sweet."
+      "reference": "Proverbs 3:24",
+      "request": {
+        "book": "Proverbs",
+        "chapter": "3",
+        "verse": "24",
+        "translation": "KJV"
+      }
     },
     "psalms": ["Psalm 27", "Psalm 121", "Psalm 29"],
     "focusAreas": ["health", "wisdom"]
@@ -61,12 +81,22 @@
     "stone": "Bloodstone",
     "keywords": ["Courage", "Justice", "Zeal"],
     "dayVerse": {
-      "ref": "Psalm 144:1",
-      "snippet": "Praise be to the Lord my Rock, who trains my hands for war, my fingers for battle."
+      "reference": "Psalm 144:1",
+      "request": {
+        "book": "Psalm",
+        "chapter": "144",
+        "verse": "1",
+        "translation": "KJV"
+      }
     },
     "proverb": {
-      "ref": "Proverbs 21:31",
-      "snippet": "The horse is made ready for the day of battle, but victory rests with the Lord."
+      "reference": "Proverbs 21:31",
+      "request": {
+        "book": "Proverbs",
+        "chapter": "21",
+        "verse": "31",
+        "translation": "KJV"
+      }
     },
     "psalms": ["Psalm 18", "Psalm 32", "Psalm 140"],
     "focusAreas": ["health", "influence"]
@@ -85,12 +115,22 @@
     "stone": "Agate",
     "keywords": ["Insight", "Healing", "Communication"],
     "dayVerse": {
-      "ref": "Proverbs 2:6",
-      "snippet": "For the Lord gives wisdom; from his mouth come knowledge and understanding."
+      "reference": "Proverbs 2:6",
+      "request": {
+        "book": "Proverbs",
+        "chapter": "2",
+        "verse": "6",
+        "translation": "KJV"
+      }
     },
     "proverb": {
-      "ref": "Proverbs 4:5",
-      "snippet": "Get wisdom, get understanding; do not forget my words or turn away from them."
+      "reference": "Proverbs 4:5",
+      "request": {
+        "book": "Proverbs",
+        "chapter": "4",
+        "verse": "5",
+        "translation": "KJV"
+      }
     },
     "psalms": ["Psalm 19", "Psalm 119", "Psalm 147"],
     "focusAreas": ["wisdom"]
@@ -109,12 +149,22 @@
     "stone": "Amethyst",
     "keywords": ["Expansion", "Mercy", "Favor"],
     "dayVerse": {
-      "ref": "Psalm 115:14",
-      "snippet": "May the Lord cause you to flourish, both you and your children."
+      "reference": "Psalm 115:14",
+      "request": {
+        "book": "Psalm",
+        "chapter": "115",
+        "verse": "14",
+        "translation": "KJV"
+      }
     },
     "proverb": {
-      "ref": "Proverbs 11:25",
-      "snippet": "A generous person will prosper; whoever refreshes others will be refreshed."
+      "reference": "Proverbs 11:25",
+      "request": {
+        "book": "Proverbs",
+        "chapter": "11",
+        "verse": "25",
+        "translation": "KJV"
+      }
     },
     "psalms": ["Psalm 112", "Psalm 145", "Psalm 24"],
     "focusAreas": ["wealth", "influence"]
@@ -133,12 +183,22 @@
     "stone": "Emerald",
     "keywords": ["Harmony", "Affection", "Beauty"],
     "dayVerse": {
-      "ref": "Psalm 52:8",
-      "snippet": "I trust in God's unfailing love for ever and ever."
+      "reference": "Psalm 52:8",
+      "request": {
+        "book": "Psalm",
+        "chapter": "52",
+        "verse": "8",
+        "translation": "KJV"
+      }
     },
     "proverb": {
-      "ref": "Proverbs 3:3-4",
-      "snippet": "Let love and faithfulness never leave you... then you will win favor and a good name."
+      "reference": "Proverbs 3:3-4",
+      "request": {
+        "book": "Proverbs",
+        "chapter": "3",
+        "verse": "3-4",
+        "translation": "KJV"
+      }
     },
     "psalms": ["Psalm 45", "Psalm 85", "Psalm 103"],
     "focusAreas": ["health", "wealth"]
@@ -157,12 +217,22 @@
     "stone": "Onyx",
     "keywords": ["Boundaries", "Endurance", "Consecration"],
     "dayVerse": {
-      "ref": "Psalm 90:12",
-      "snippet": "Teach us to number our days, that we may gain a heart of wisdom."
+      "reference": "Psalm 90:12",
+      "request": {
+        "book": "Psalm",
+        "chapter": "90",
+        "verse": "12",
+        "translation": "KJV"
+      }
     },
     "proverb": {
-      "ref": "Proverbs 16:32",
-      "snippet": "Better a patient person than a warrior, one with self-control than one who takes a city."
+      "reference": "Proverbs 16:32",
+      "request": {
+        "book": "Proverbs",
+        "chapter": "16",
+        "verse": "32",
+        "translation": "KJV"
+      }
     },
     "psalms": ["Psalm 15", "Psalm 94", "Psalm 130"],
     "focusAreas": ["wisdom", "health"]

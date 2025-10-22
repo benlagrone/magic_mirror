@@ -6,7 +6,7 @@ MagicMirror² module that renders a Solomonic prayer clock aligning biblical wis
 
 - Shows the current weekday with associated planet, archangel, divine name, and devotional theme.
 - Calculates live planetary hours using SunCalc based on configured latitude and longitude.
-- Surfaces a verse snippet from `solomonic_focus_mapping.json`, rotating through focus areas (`wisdom`, `wealth`, `health`, `influence` by default).
+- Surfaces hourly scripture references (rotating through `wisdom`, `wealth`, `health`, `influence`) and fetches verse text from a configurable Bible service.
 - Displays upcoming hour preview to help the user prepare.
 - Optional sigil display by dropping images into `assets/sigils/{angel}.png`.
 
@@ -35,7 +35,9 @@ npm install
     focusAreas: ["wisdom", "wealth", "health", "influence"],
     locale: "en",
     updateInterval: 60 * 1000,
-    rotationIntervalSeconds: 15     // override front-end cycle (seconds); fallback rotationInterval (ms)
+    rotationIntervalSeconds: 15,    // override front-end cycle (seconds); fallback rotationInterval (ms)
+    verseServiceUrl: "http://192.168.86.23:8001/get-verse",
+    verseTranslation: "KJV"          // optional override; defaults to KJV
   }
 }
 ```
@@ -45,6 +47,7 @@ npm install
 - `solomonic_focus_mapping.json` is loaded at start-up.
 - Weekday ↔ planetary correspondences live in `calendar.js`.
 - Planetary hour math uses SunCalc for sunrise/sunset bounds (`utils/planetaryHours.js`).
+- Hourly and daily scripture text is retrieved from `config.verseServiceUrl` (POST JSON API expected to match the included sample payload).
 - Additional data packs live under `data/`:
   - `weekday_correspondences.json` – daily angel/divine-name themes, colors, psalms, and incense.
   - `planetary_attributes.json` – planetary intelligences, spirits, and ritual metadata.

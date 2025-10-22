@@ -9,6 +9,36 @@ const { isWithin } = require("./utils/timeHelpers");
 const focusCollections = require("./data/focus_area_collections.json");
 const rawSigilManifest = require("./data/sigil_manifest.json");
 
+const DEFAULT_VERSE_SERVICE_URL = "http://192.168.86.23:8001/get-verse";
+
+let fetchImpl = typeof fetch === "function" ? fetch.bind(global) : null;
+
+async function fetchWithFallback(url, options) {
+  if (!fetchImpl) {
+    const module = await import("node-fetch");
+    fetchImpl = module.default;
+  }
+  return fetchImpl(url, options);
+}
+
+function parseVerseResponse(raw) {
+  try {
+    let data = typeof raw === "string" ? JSON.parse(raw) : raw;
+    if (typeof data === "string") {
+      data = JSON.parse(data);
+    }
+    return data;
+  } catch (error) {
+    throw new Error(`Unable to parse verse response: ${error.message}`);
+  }
+}
+
+function sanitizeText(text) {
+  return String(text || "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 module.exports = NodeHelper.create({
   start() {
     this.config = null;
@@ -20,6 +50,7 @@ module.exports = NodeHelper.create({
     this.sigilManifest = rawSigilManifest || {};
     this.sigilManifestByFile = {};
     this.sigilManifestByAngel = {};
+    this.verseCache = new Map();
     Object.keys(this.sigilManifest).forEach((key) => {
       const entry = this.sigilManifest[key];
       if (!entry) {
@@ -65,6 +96,13 @@ module.exports = NodeHelper.create({
     this.config.psalmDisplayMode = this.config.psalmDisplayMode || "cycle";
     this.latitude = Number(this.config.latitude);
     this.longitude = Number(this.config.longitude);
+    this.verseServiceUrl =
+      typeof this.config.verseServiceUrl === "string" && this.config.verseServiceUrl.trim().length > 0
+        ? this.config.verseServiceUrl.trim()
+        : DEFAULT_VERSE_SERVICE_URL;
+    this.verseTranslation =
+      this.config.verseTranslation || this.config.translation || "KJV";
+    this.config.translation = this.verseTranslation;
   },
 
   async loadFocusMapping() {
@@ -84,21 +122,22 @@ module.exports = NodeHelper.create({
     this.updateTimer = setInterval(() => this.broadcastData(false), this.config.updateInterval);
   },
 
-  broadcastData(initial) {
+  async broadcastData(initial) {
     try {
-      const payload = this.buildPayload(initial);
+      const payload = await this.buildPayload(initial);
       this.sendSocketNotification("SPC_DATA", payload);
     } catch (error) {
       this.sendError(error.message || error.toString());
     }
   },
 
-  buildPayload(initial) {
+  async buildPayload(initial) {
     const now = new Date();
-    const dayInfo = getDayData(now);
-    if (!dayInfo) {
+    const rawDayInfo = getDayData(now);
+    if (!rawDayInfo) {
       throw new Error("Unable to determine Solomonic day data for current date.");
     }
+    const dayInfo = { ...rawDayInfo };
 
     const hours = calculatePlanetaryHours(now, this.latitude, this.longitude, dayInfo.planetKey);
     if (!hours.length) {
@@ -116,8 +155,19 @@ module.exports = NodeHelper.create({
       this.lastBroadcastHourIndex = currentHour.index;
     }
 
-    const decoratedCurrent = this.decorateHour(currentHour, focusAreas, isNewHour);
-    const decoratedNext = this.decorateHour(nextHour, focusAreas, false);
+    const [decoratedCurrent, decoratedNext, dayVerse, dayProverb] = await Promise.all([
+      this.decorateHour(currentHour, focusAreas, isNewHour),
+      this.decorateHour(nextHour, focusAreas, false),
+      this.fetchCitation(dayInfo.dayVerse, dayInfo.dayVerse?.reference || "Day Verse"),
+      this.fetchCitation(dayInfo.proverb, dayInfo.proverb?.reference || "Proverb")
+    ]);
+
+    dayInfo.dayVerse = dayVerse || null;
+    if (dayProverb) {
+      dayInfo.proverb = dayProverb;
+    } else {
+      delete dayInfo.proverb;
+    }
 
     return {
       generatedAt: now,
@@ -138,17 +188,24 @@ module.exports = NodeHelper.create({
     };
   },
 
-  decorateHour(hour, focusAreas, advanceCounter) {
+  async decorateHour(hour, focusAreas, advanceCounter) {
     const focusArea =
       focusAreas.length > 0 ? focusAreas[(hour.index - 1) % focusAreas.length] : "wisdom";
     const normalizedFocus = String(focusArea);
     const displayFocus = normalizedFocus.charAt(0).toUpperCase() + normalizedFocus.slice(1);
 
     const counter = this.focusCounters[normalizedFocus] || 0;
-    const verse = getVerseForFocus(this.focusMapping, normalizedFocus, {
+    const verseEntry = getVerseForFocus(this.focusMapping, normalizedFocus, {
       mode: this.config.psalmDisplayMode,
       index: counter
     });
+    const verse =
+      verseEntry && typeof verseEntry === "object"
+        ? await this.fetchCitation(
+            verseEntry,
+            verseEntry.reference || verseEntry.ref || `${displayFocus} Verse`
+          )
+        : null;
 
     if (advanceCounter && this.config.psalmDisplayMode === "cycle") {
       const poolLength = this.focusMapping?.[normalizedFocus]?.length || 1;
@@ -158,17 +215,20 @@ module.exports = NodeHelper.create({
     const planetDetails = getPlanetInfo(hour.planetKey) || {};
     const sigil = this.resolveSigilMeta(hour.sigil || planetDetails.sigil, hour.angel);
     const focusPack = this.focusCollections[normalizedFocus] || {};
-    const proverbList = focusPack.proverbs || [];
-    const declarationList = focusPack.declarations || [];
-
-    const proverb =
-      proverbList.length === 0
-        ? null
-        : this.pickFromCollection(proverbList, counter, this.config.psalmDisplayMode);
-    const declaration =
-      declarationList.length === 0
-        ? null
-        : this.pickFromCollection(declarationList, counter, this.config.psalmDisplayMode);
+    const proverbEntry = this.pickFromCollection(
+      focusPack.proverbs || [],
+      counter,
+      this.config.psalmDisplayMode
+    );
+    const proverb = await this.fetchCitation(
+      proverbEntry,
+      (proverbEntry && (proverbEntry.reference || proverbEntry.ref)) || "Proverb"
+    );
+    const declaration = this.pickFromCollection(
+      focusPack.declarations || [],
+      counter,
+      this.config.psalmDisplayMode
+    );
 
     return {
       ...hour,
@@ -188,9 +248,106 @@ module.exports = NodeHelper.create({
     }
     if (mode === "random") {
       const randomIndex = Math.floor(Math.random() * collection.length);
-      return collection[randomIndex];
+      return collection[randomIndex] || null;
     }
-    return collection[counter % collection.length];
+    const index = counter % collection.length;
+    return collection[index] || null;
+  },
+
+  async fetchCitation(citation, fallbackReference) {
+    if (!citation) {
+      return null;
+    }
+
+    if (typeof citation === "string") {
+      return {
+        reference: fallbackReference || "",
+        text: sanitizeText(citation)
+      };
+    }
+
+    if (citation.text || citation.snippet) {
+      return {
+        reference: citation.reference || citation.ref || fallbackReference || "",
+        text: sanitizeText(citation.text || citation.snippet)
+      };
+    }
+
+    const request = citation.request || citation;
+    if (!request || !request.book || !request.chapter || !request.verse) {
+      return {
+        reference: citation.reference || citation.ref || fallbackReference || "",
+        text: ""
+      };
+    }
+
+    const normalizedRequest = {
+      book: String(request.book).trim(),
+      chapter: String(request.chapter).trim(),
+      verse: String(request.verse).trim(),
+      translation: request.translation || this.verseTranslation || "KJV"
+    };
+
+    const cacheKey = JSON.stringify(normalizedRequest);
+    if (this.verseCache.has(cacheKey)) {
+      const cached = this.verseCache.get(cacheKey);
+      return {
+        reference: citation.reference || citation.ref || cached.reference || fallbackReference || "",
+        text: cached.text
+      };
+    }
+
+    try {
+      const response = await fetchWithFallback(this.verseServiceUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify(normalizedRequest)
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const raw = await response.text();
+      const payload = parseVerseResponse(raw);
+      const combinedText = sanitizeText(
+        payload?.text ||
+          (Array.isArray(payload?.verses)
+            ? payload.verses.map((entry) => entry.text || "").join(" ")
+            : "")
+      );
+      const textContent = combinedText.length > 0 ? combinedText : "[Verse unavailable]";
+
+      const reference =
+        citation.reference ||
+        citation.ref ||
+        payload?.reference ||
+        fallbackReference ||
+        `${normalizedRequest.book} ${normalizedRequest.chapter}:${normalizedRequest.verse}`;
+
+      const result = {
+        reference,
+        text: textContent
+      };
+
+      this.verseCache.set(cacheKey, result);
+      return { ...result };
+    } catch (error) {
+      console.error(
+        `[MMM-SolomonicPrayerClock] Verse fetch failed (${normalizedRequest.book} ${normalizedRequest.chapter}:${normalizedRequest.verse}): ${error.message}`
+      );
+      return {
+        reference:
+          citation.reference ||
+          citation.ref ||
+          fallbackReference ||
+          `${normalizedRequest.book} ${normalizedRequest.chapter}:${normalizedRequest.verse}`,
+        text: "[Verse unavailable]"
+      };
+    }
   },
 
   resolveSigilMeta(sigilFile, angelName) {

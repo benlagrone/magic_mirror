@@ -14,7 +14,9 @@ Module.register("MMM-SolomonicPrayerClock", {
     locale: "en",
     updateInterval: 60 * 1000,
     rotationInterval: 10 * 1000,
-    rotationIntervalSeconds: null
+    rotationIntervalSeconds: null,
+    verseServiceUrl: null,
+    verseTranslation: "KJV"
   },
 
   requiresVersion: "2.18.0",
@@ -147,10 +149,6 @@ Module.register("MMM-SolomonicPrayerClock", {
       Array.isArray(day.focusAreas) ? day.focusAreas.join(", ") : null
     );
 
-    const verse = document.createElement("div");
-    verse.className = "spc-verse";
-    verse.innerHTML = `<span class="ref">${day.dayVerse.ref}</span> – ${day.dayVerse.snippet}`;
-
     container.appendChild(header);
     container.appendChild(angelLine);
     container.appendChild(divineLine);
@@ -178,7 +176,13 @@ Module.register("MMM-SolomonicPrayerClock", {
     if (focusLine) {
       container.appendChild(focusLine);
     }
-    container.appendChild(verse);
+    const dayVerse = this.normaliseCitation(day.dayVerse, "Day Verse");
+    if (dayVerse && dayVerse.snippet) {
+      const verse = document.createElement("div");
+      verse.className = "spc-verse";
+      verse.innerHTML = `<span class="ref">${dayVerse.ref}</span> – ${dayVerse.snippet}`;
+      container.appendChild(verse);
+    }
 
     const dayProverb = this.normaliseCitation(day.proverb, "Proverb");
     if (dayProverb && dayProverb.snippet) {
@@ -232,10 +236,6 @@ Module.register("MMM-SolomonicPrayerClock", {
     const intelligenceLine = this.renderAttributeLine("Intelligence", planetDetails.intelligence);
     const spiritLine = this.renderAttributeLine("Spirit", planetDetails.spirit);
 
-    const verse = document.createElement("div");
-    verse.className = "spc-verse";
-    verse.innerHTML = `<span class="ref">${hour.verse.ref}</span> – ${hour.verse.snippet}`;
-
     container.appendChild(header);
     container.appendChild(angelLine);
     container.appendChild(timeLine);
@@ -252,7 +252,13 @@ Module.register("MMM-SolomonicPrayerClock", {
     if (spiritLine) {
       container.appendChild(spiritLine);
     }
-    container.appendChild(verse);
+    const hourVerse = this.normaliseCitation(hour.verse, "Verse");
+    if (hourVerse && hourVerse.snippet) {
+      const verse = document.createElement("div");
+      verse.className = "spc-verse";
+      verse.innerHTML = `<span class="ref">${hourVerse.ref}</span> – ${hourVerse.snippet}`;
+      container.appendChild(verse);
+    }
 
     const hourProverb = this.normaliseCitation(hour.proverb, "Proverb");
     if (hourProverb && hourProverb.snippet) {
@@ -352,8 +358,8 @@ Module.register("MMM-SolomonicPrayerClock", {
       };
     }
     return {
-      ref: entry.ref || fallbackRef || "",
-      snippet: entry.snippet || ""
+      ref: entry.reference || entry.ref || fallbackRef || "",
+      snippet: entry.text || entry.snippet || ""
     };
   }
 });
