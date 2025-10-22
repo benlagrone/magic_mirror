@@ -27,7 +27,8 @@ Module.register("MMM-SolomonicPrayerClock", {
     this.payload = null;
     this.rotationIndex = 0;
     this.rotationTimer = null;
-    this.modalOverlay = null;
+    this.modalRoot = null;
+    this.modalBackdrop = null;
     this.modalContent = null;
     this.modalTitle = null;
     this.modalBody = null;
@@ -355,13 +356,18 @@ Module.register("MMM-SolomonicPrayerClock", {
     ref.className = "ref";
     ref.textContent = citation.ref || "";
 
+    const snippet = document.createElement("span");
+    snippet.className = "spc-citation-snippet";
+    snippet.textContent = citation.snippet;
+
     if (this.canRequestChapter(citation)) {
-      ref.classList.add("spc-citation-link");
-      ref.addEventListener("click", () => this.openChapterModal(citation));
+      container.classList.add("spc-citation-clickable");
+      container.addEventListener("click", () => this.openChapterModal(citation));
     }
 
     container.appendChild(ref);
-    container.appendChild(document.createTextNode(` – ${citation.snippet}`));
+    container.appendChild(document.createTextNode(" – "));
+    container.appendChild(snippet);
     return container;
   },
 
@@ -465,44 +471,64 @@ Module.register("MMM-SolomonicPrayerClock", {
   },
 
   ensureModal() {
-    if (this.modalOverlay) {
+    if (this.modalRoot) {
       return;
     }
 
-    const overlay = document.createElement("div");
-    overlay.className = "spc-modal-overlay hidden";
-    overlay.addEventListener("click", (event) => {
-      if (event.target === overlay) {
+    const modal = document.createElement("div");
+    modal.className = "modal fade spc-modal";
+    modal.tabIndex = -1;
+
+    const dialog = document.createElement("div");
+    dialog.className = "modal-dialog modal-lg modal-dialog-centered";
+
+    const content = document.createElement("div");
+    content.className = "modal-content";
+
+    const header = document.createElement("div");
+    header.className = "modal-header";
+
+    const title = document.createElement("h5");
+    title.className = "modal-title";
+
+    const closeButton = document.createElement("button");
+    closeButton.type = "button";
+    closeButton.className = "btn-close";
+    closeButton.setAttribute("aria-label", "Close");
+    closeButton.addEventListener("click", () => this.closeChapterModal());
+
+    header.appendChild(title);
+    header.appendChild(closeButton);
+
+    const body = document.createElement("div");
+    body.className = "modal-body";
+
+    const footer = document.createElement("div");
+    footer.className = "modal-footer";
+
+    const translation = document.createElement("small");
+    translation.className = "text-muted";
+    footer.appendChild(translation);
+
+    content.appendChild(header);
+    content.appendChild(body);
+    content.appendChild(footer);
+    dialog.appendChild(content);
+    modal.appendChild(dialog);
+    document.body.appendChild(modal);
+
+    const backdrop = document.createElement("div");
+    backdrop.className = "modal-backdrop fade spc-modal-backdrop";
+    document.body.appendChild(backdrop);
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) {
         this.closeChapterModal();
       }
     });
 
-    const content = document.createElement("div");
-    content.className = "spc-modal-content";
-
-    const close = document.createElement("button");
-    close.className = "spc-modal-close";
-    close.type = "button";
-    close.textContent = "×";
-    close.addEventListener("click", () => this.closeChapterModal());
-
-    const title = document.createElement("div");
-    title.className = "spc-modal-title";
-
-    const translation = document.createElement("div");
-    translation.className = "spc-modal-translation";
-
-    const body = document.createElement("div");
-    body.className = "spc-modal-body";
-
-    content.appendChild(close);
-    content.appendChild(title);
-    content.appendChild(translation);
-    content.appendChild(body);
-    overlay.appendChild(content);
-    document.body.appendChild(overlay);
-
-    this.modalOverlay = overlay;
+    this.modalRoot = modal;
+    this.modalBackdrop = backdrop;
     this.modalContent = content;
     this.modalTitle = title;
     this.modalBody = body;
@@ -511,11 +537,18 @@ Module.register("MMM-SolomonicPrayerClock", {
 
   showChapterModal({ reference, text, translation, error, loading }) {
     this.ensureModal();
-    if (!this.modalOverlay) {
+    if (!this.modalRoot) {
       return;
     }
 
-    this.modalOverlay.classList.remove("hidden");
+    this.modalRoot.style.display = "block";
+    this.modalRoot.classList.add("show");
+    if (this.modalBackdrop) {
+      this.modalBackdrop.style.display = "block";
+      this.modalBackdrop.classList.add("show");
+    }
+    document.body.classList.add("modal-open");
+
     const titleText = reference || "Chapter";
     this.modalTitle.textContent = titleText;
     this.modalTranslation.textContent = translation ? `Translation: ${translation}` : "";
@@ -546,9 +579,15 @@ Module.register("MMM-SolomonicPrayerClock", {
   },
 
   closeChapterModal() {
-    if (this.modalOverlay) {
-      this.modalOverlay.classList.add("hidden");
+    if (this.modalRoot) {
+      this.modalRoot.classList.remove("show");
+      this.modalRoot.style.display = "none";
     }
+    if (this.modalBackdrop) {
+      this.modalBackdrop.classList.remove("show");
+      this.modalBackdrop.style.display = "none";
+    }
+    document.body.classList.remove("modal-open");
     this.activeChapterRequests = {};
   },
 

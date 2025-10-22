@@ -45,11 +45,6 @@
   color: #c8f0d0;
 }
 
-.spc-citation-link {
-  cursor: pointer;
-  text-decoration: underline;
-}
-
 .spc-citation-group {
   margin-top: 4px;
   display: flex;
@@ -61,66 +56,85 @@
   padding-left: 12px;
 }
 
-.spc-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.82);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.spc-modal-overlay.hidden {
-  display: none;
-}
-
-.spc-modal-content {
-  position: relative;
-  max-width: 80vw;
-  max-height: 80vh;
-  overflow-y: auto;
-  background: rgba(24, 24, 24, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 18px 20px;
-  border-radius: 8px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-}
-
-.spc-modal-title {
-  font-size: 1.2em;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.spc-modal-translation {
-  font-size: 0.85em;
-  color: #a0a0ff;
-  margin-bottom: 10px;
-}
-
-.spc-modal-body {
-  font-size: 0.95em;
-  line-height: 1.6;
-}
-
-.spc-modal-body p {
-  margin: 0 0 8px;
-}
-
-.spc-modal-close {
-  position: absolute;
-  top: 6px;
-  right: 10px;
-  background: transparent;
-  border: none;
-  color: #ffffff;
-  font-size: 1.5em;
+.spc-citation-clickable {
   cursor: pointer;
 }
 
-.spc-modal-close:hover {
-  color: #ff6666;
+.spc-citation-clickable .ref {
+  text-decoration: underline;
+}
+
+.spc-citation-snippet {
+  font-style: normal;
+}
+
+.modal.spc-modal {
+  --spc-modal-bg: rgba(24, 24, 24, 0.97);
+  --spc-border: rgba(255, 255, 255, 0.1);
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  overflow-x: hidden;
+  overflow-y: auto;
+  outline: 0;
+}
+
+.modal.show.spc-modal {
+  display: block;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+.modal-backdrop.spc-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.82);
+  z-index: 1040;
+  display: none;
+}
+
+.modal-backdrop.show.spc-modal-backdrop {
+  display: block;
+}
+
+.modal.spc-modal .modal-dialog {
+  margin: 1.75rem auto;
+}
+
+.modal.spc-modal .modal-content {
+  background-color: var(--spc-modal-bg);
+  border: 1px solid var(--spc-border);
+  border-radius: 0.5rem;
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.45);
+  color: inherit;
+}
+
+.modal.spc-modal .modal-header {
+  border-bottom: 1px solid var(--spc-border);
+}
+
+.modal.spc-modal .modal-footer {
+  border-top: 1px solid var(--spc-border);
+}
+
+.modal.spc-modal .modal-body {
+  line-height: 1.6;
+}
+
+.modal.spc-modal .modal-body p {
+  margin-bottom: 0.75rem;
+}
+
+.modal.spc-modal .btn-close {
+  filter: invert(100%);
+  opacity: 0.7;
+}
+
+.modal.spc-modal .btn-close:hover {
+  opacity: 1;
 }
 
 .spc-modal-error {
