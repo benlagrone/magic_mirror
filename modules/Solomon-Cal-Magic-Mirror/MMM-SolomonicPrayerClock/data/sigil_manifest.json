@@ -1,0 +1,51 @@
+{
+  "michael": {
+    "angel": "Michael",
+    "file": "michael.png",
+    "alt": "Solar sigil of Archangel Michael",
+    "source": "Key of Solomon, Book I",
+    "notes": "Solar rulership, authority, protection."
+  },
+  "gabriel": {
+    "angel": "Gabriel",
+    "file": "gabriel.png",
+    "alt": "Lunar sigil of Archangel Gabriel",
+    "source": "Ars Paulina, Lunar choir",
+    "notes": "Dreams, memory, revelation."
+  },
+  "samael": {
+    "angel": "Samael",
+    "file": "samael.png",
+    "alt": "Martian sigil of Archangel Samael",
+    "source": "Key of Solomon, planetary pentacles",
+    "notes": "Holy warfare, justice, courage."
+  },
+  "raphael": {
+    "angel": "Raphael",
+    "file": "raphael.png",
+    "alt": "Mercurial sigil of Archangel Raphael",
+    "source": "Ars Paulina, Mercury hours",
+    "notes": "Wisdom, healing, inspired speech."
+  },
+  "sachiel": {
+    "angel": "Sachiel",
+    "file": "sachiel.png",
+    "alt": "Jupiter sigil of Archangel Sachiel",
+    "source": "Key of Solomon, Jupiter pentacles",
+    "notes": "Blessing, benevolence, increase."
+  },
+  "anael": {
+    "angel": "Anael",
+    "file": "anael.png",
+    "alt": "Venus sigil of Archangel Anael",
+    "source": "Ars Paulina, Venus hours",
+    "notes": "Love, covenant, beauty."
+  },
+  "cassiel": {
+    "angel": "Cassiel",
+    "file": "cassiel.png",
+    "alt": "Saturn sigil of Archangel Cassiel",
+    "source": "Key of Solomon, Saturn pentacles",
+    "notes": "Boundaries, remembrance, sabbath."
+  }
+}

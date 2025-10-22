@@ -1,0 +1,46 @@
+{
+  "wisdom": {
+    "proverbs": [
+      {"ref": "Proverbs 1:5", "snippet": "Let the wise listen and add to their learning."},
+      {"ref": "Proverbs 9:10", "snippet": "The fear of the Lord is the beginning of wisdom."},
+      {"ref": "Proverbs 16:16", "snippet": "How much better to get wisdom than gold!"}
+    ],
+    "declarations": [
+      "I receive the spirit of wisdom and revelation in the knowledge of Christ.",
+      "My mind is renewed, and I discern the will of the Lord."
+    ]
+  },
+  "wealth": {
+    "proverbs": [
+      {"ref": "Proverbs 8:18", "snippet": "With me are riches and honor, enduring wealth and prosperity."},
+      {"ref": "Proverbs 10:4", "snippet": "Lazy hands make for poverty, but diligent hands bring wealth."},
+      {"ref": "Proverbs 13:22", "snippet": "A good person leaves an inheritance for their children's children."}
+    ],
+    "declarations": [
+      "The blessing of the Lord makes me rich and adds no sorrow.",
+      "I steward resources in righteousness and generosity."
+    ]
+  },
+  "health": {
+    "proverbs": [
+      {"ref": "Proverbs 3:7-8", "snippet": "Fear the Lord and shun evil. This will bring health to your body."},
+      {"ref": "Proverbs 4:22", "snippet": "They are life to those who find them and health to one's whole body."},
+      {"ref": "Proverbs 17:22", "snippet": "A cheerful heart is good medicine, but a crushed spirit dries up the bones."}
+    ],
+    "declarations": [
+      "By His stripes I am healed and sustained.",
+      "My body is a temple of the Holy Spirit, strong and protected."
+    ]
+  },
+  "influence": {
+    "proverbs": [
+      {"ref": "Proverbs 3:4", "snippet": "Then you will win favor and a good name in the sight of God and man."},
+      {"ref": "Proverbs 11:11", "snippet": "Through the blessing of the upright a city is exalted."},
+      {"ref": "Proverbs 22:11", "snippet": "One who loves a pure heart and gracious speech will have the king for a friend."}
+    ],
+    "declarations": [
+      "The Lord enlarges my influence for His purposes.",
+      "My words carry grace, truth, and authority."
+    ]
+  }
+}

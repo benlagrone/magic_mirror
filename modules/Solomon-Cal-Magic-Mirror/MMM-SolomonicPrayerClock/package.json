@@ -1,0 +1,10 @@
+{
+  "name": "mmm-solomonicprayerclock",
+  "version": "0.1.0",
+  "description": "MagicMirror² module that renders a Solomonic prayer dashboard with planetary hours.",
+  "main": "MMM-SolomonicPrayerClock.js",
+  "license": "CC-BY-NC-SA-4.0",
+  "dependencies": {
+    "suncalc": "^1.9.0"
+  }
+}

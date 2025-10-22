@@ -1,0 +1,170 @@
+{
+  "sunday": {
+    "dayName": "Sunday",
+    "planetKey": "sun",
+    "angel": "Michael",
+    "divineName": "Adonai",
+    "theme": "Authority",
+    "emoji": "🌞",
+    "sigil": "michael.png",
+    "color": "Gold",
+    "incense": "Frankincense",
+    "metal": "Gold",
+    "stone": "Amber",
+    "keywords": ["Leadership", "Favor", "Light"],
+    "dayVerse": {
+      "ref": "Psalm 84:11",
+      "snippet": "The Lord God is a sun and shield; the Lord bestows favor and honor."
+    },
+    "proverb": {
+      "ref": "Proverbs 16:3",
+      "snippet": "Commit to the Lord whatever you do, and he will establish your plans."
+    },
+    "psalms": ["Psalm 23", "Psalm 84", "Psalm 113"],
+    "focusAreas": ["influence", "wisdom"]
+  },
+  "monday": {
+    "dayName": "Monday",
+    "planetKey": "moon",
+    "angel": "Gabriel",
+    "divineName": "El Shaddai",
+    "theme": "Reflection",
+    "emoji": "🌙",
+    "sigil": "gabriel.png",
+    "color": "Silver",
+    "incense": "Myrrh",
+    "metal": "Silver",
+    "stone": "Pearl",
+    "keywords": ["Compassion", "Dreams", "Protection"],
+    "dayVerse": {
+      "ref": "Psalm 63:6",
+      "snippet": "On my bed I remember you; I think of you through the watches of the night."
+    },
+    "proverb": {
+      "ref": "Proverbs 3:24",
+      "snippet": "When you lie down, you will not be afraid; when you lie down, your sleep will be sweet."
+    },
+    "psalms": ["Psalm 27", "Psalm 121", "Psalm 29"],
+    "focusAreas": ["health", "wisdom"]
+  },
+  "tuesday": {
+    "dayName": "Tuesday",
+    "planetKey": "mars",
+    "angel": "Samael",
+    "divineName": "Elohim Gibor",
+    "theme": "Warfare",
+    "emoji": "♂",
+    "sigil": "samael.png",
+    "color": "Crimson",
+    "incense": "Dragon's Blood",
+    "metal": "Iron",
+    "stone": "Bloodstone",
+    "keywords": ["Courage", "Justice", "Zeal"],
+    "dayVerse": {
+      "ref": "Psalm 144:1",
+      "snippet": "Praise be to the Lord my Rock, who trains my hands for war, my fingers for battle."
+    },
+    "proverb": {
+      "ref": "Proverbs 21:31",
+      "snippet": "The horse is made ready for the day of battle, but victory rests with the Lord."
+    },
+    "psalms": ["Psalm 18", "Psalm 32", "Psalm 140"],
+    "focusAreas": ["health", "influence"]
+  },
+  "wednesday": {
+    "dayName": "Wednesday",
+    "planetKey": "mercury",
+    "angel": "Raphael",
+    "divineName": "YHVH Tsabaoth",
+    "theme": "Wisdom",
+    "emoji": "☿",
+    "sigil": "raphael.png",
+    "color": "Yellow",
+    "incense": "Storax",
+    "metal": "Mercury",
+    "stone": "Agate",
+    "keywords": ["Insight", "Healing", "Communication"],
+    "dayVerse": {
+      "ref": "Proverbs 2:6",
+      "snippet": "For the Lord gives wisdom; from his mouth come knowledge and understanding."
+    },
+    "proverb": {
+      "ref": "Proverbs 4:5",
+      "snippet": "Get wisdom, get understanding; do not forget my words or turn away from them."
+    },
+    "psalms": ["Psalm 19", "Psalm 119", "Psalm 147"],
+    "focusAreas": ["wisdom"]
+  },
+  "thursday": {
+    "dayName": "Thursday",
+    "planetKey": "jupiter",
+    "angel": "Sachiel",
+    "divineName": "El Elyon",
+    "theme": "Blessing",
+    "emoji": "♃",
+    "sigil": "sachiel.png",
+    "color": "Royal Blue",
+    "incense": "Cedar",
+    "metal": "Tin",
+    "stone": "Amethyst",
+    "keywords": ["Expansion", "Mercy", "Favor"],
+    "dayVerse": {
+      "ref": "Psalm 115:14",
+      "snippet": "May the Lord cause you to flourish, both you and your children."
+    },
+    "proverb": {
+      "ref": "Proverbs 11:25",
+      "snippet": "A generous person will prosper; whoever refreshes others will be refreshed."
+    },
+    "psalms": ["Psalm 112", "Psalm 145", "Psalm 24"],
+    "focusAreas": ["wealth", "influence"]
+  },
+  "friday": {
+    "dayName": "Friday",
+    "planetKey": "venus",
+    "angel": "Anael",
+    "divineName": "YHVH Ra'ah",
+    "theme": "Love",
+    "emoji": "♀",
+    "sigil": "anael.png",
+    "color": "Emerald",
+    "incense": "Rose",
+    "metal": "Copper",
+    "stone": "Emerald",
+    "keywords": ["Harmony", "Affection", "Beauty"],
+    "dayVerse": {
+      "ref": "Psalm 52:8",
+      "snippet": "I trust in God's unfailing love for ever and ever."
+    },
+    "proverb": {
+      "ref": "Proverbs 3:3-4",
+      "snippet": "Let love and faithfulness never leave you... then you will win favor and a good name."
+    },
+    "psalms": ["Psalm 45", "Psalm 85", "Psalm 103"],
+    "focusAreas": ["health", "wealth"]
+  },
+  "saturday": {
+    "dayName": "Saturday",
+    "planetKey": "saturn",
+    "angel": "Cassiel",
+    "divineName": "Elohim",
+    "theme": "Judgment",
+    "emoji": "♄",
+    "sigil": "cassiel.png",
+    "color": "Indigo",
+    "incense": "Myrrh",
+    "metal": "Lead",
+    "stone": "Onyx",
+    "keywords": ["Boundaries", "Endurance", "Consecration"],
+    "dayVerse": {
+      "ref": "Psalm 90:12",
+      "snippet": "Teach us to number our days, that we may gain a heart of wisdom."
+    },
+    "proverb": {
+      "ref": "Proverbs 16:32",
+      "snippet": "Better a patient person than a warrior, one with self-control than one who takes a city."
+    },
+    "psalms": ["Psalm 15", "Psalm 94", "Psalm 130"],
+    "focusAreas": ["wisdom", "health"]
+  }
+}

@@ -32,5 +32,6 @@ docker compose logs -f
 - Update `config/config.js` before rebuilding to modify modules, locations, or API keys.
 - Third-party modules are vendored under `modules/` (e.g., `MMM-Dad-Jokes`, `MMM-SolarPicture`, `MMM-PreciousMetals`). After cloning new modules, add matching bind mounts in `docker-compose.yml` and run `docker compose run --rm magic-mirror npm install --prefix modules/<ModuleName>` when a module ships a `package.json`.
 - `MMM-PreciousMetals` requires a [metals.dev](https://metals.dev) API key. Set it via `config/config.js`.
+- `MMM-SolomonicPrayerClock` is included from [benlagrone/Solomon-Cal-Magic-Mirror](https://github.com/benlagrone/Solomon-Cal-Magic-Mirror); its assets live under `modules/Solomon-Cal-Magic-Mirror/MMM-SolomonicPrayerClock`. Adjust latitude/longitude, theme, and focus settings in `config/config.js`, and keep dependencies current with `docker compose run --rm magic-mirror npm install --prefix modules/MMM-SolomonicPrayerClock`.
 
 Redeploy changes with `docker compose up -d`.

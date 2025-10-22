@@ -1,0 +1,62 @@
+# MMM-SolomonicPrayerClock
+
+MagicMirror² module that renders a Solomonic prayer clock aligning biblical wisdom with traditional planetary hours.
+
+## Features
+
+- Shows the current weekday with associated planet, archangel, divine name, and devotional theme.
+- Calculates live planetary hours using SunCalc based on configured latitude and longitude.
+- Surfaces a verse snippet from `solomonic_focus_mapping.json`, rotating through focus areas (`wisdom`, `wealth`, `health`, `influence` by default).
+- Displays upcoming hour preview to help the user prepare.
+- Optional sigil display by dropping images into `assets/sigils/{angel}.png`.
+
+## Installation
+
+```bash
+cd ~/MagicMirror/modules
+git clone https://github.com/YOUR-USERNAME/MMM-SolomonicPrayerClock.git
+cd MMM-SolomonicPrayerClock
+npm install
+```
+
+## Configuration
+
+```js
+{
+  module: "MMM-SolomonicPrayerClock",
+  position: "top_left",
+  config: {
+    latitude: 29.7604,
+    longitude: -95.3698,
+    theme: "expanded",             // "minimalist" | "expanded"
+    showSigils: true,
+    showUpcoming: true,
+    psalmDisplayMode: "cycle",     // "cycle" | "random"
+    focusAreas: ["wisdom", "wealth", "health", "influence"],
+    locale: "en",
+    updateInterval: 60 * 1000,
+    rotationInterval: 10 * 1000
+  }
+}
+```
+
+## Data Sources
+
+- `solomonic_focus_mapping.json` is loaded at start-up.
+- Weekday ↔ planetary correspondences live in `calendar.js`.
+- Planetary hour math uses SunCalc for sunrise/sunset bounds (`utils/planetaryHours.js`).
+- Additional data packs live under `data/`:
+  - `weekday_correspondences.json` – daily angel/divine-name themes, colors, psalms, and incense.
+  - `planetary_attributes.json` – planetary intelligences, spirits, and ritual metadata.
+  - `focus_area_collections.json` – extra Proverbs and declarations keyed to each focus area.
+  - `sigil_manifest.json` – file manifest with alt text and sourcing for angelic sigils.
+
+## Development
+
+1. Run `npm install`.
+2. Use `npm run lint` (if added) or your preferred tooling.
+3. Drop optional sigil images under `assets/sigils/ANGEL.png`.
+
+## License
+
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)

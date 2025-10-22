@@ -1,0 +1,68 @@
+.spc-wrapper {
+  padding: 8px;
+  line-height: 1.4;
+  max-width: 320px;
+}
+
+.spc-day-view,
+.spc-hour-view {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.spc-day-header,
+.spc-hour-header {
+  font-size: 1.1em;
+}
+
+.spc-line .label {
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+.spc-verse {
+  font-style: italic;
+  font-size: 0.9em;
+}
+
+.spc-proverb {
+  font-style: normal;
+  font-size: 0.85em;
+  color: #d0c4ff;
+}
+
+.spc-verse .ref {
+  font-weight: 600;
+  font-style: normal;
+  margin-right: 4px;
+}
+
+.spc-declaration {
+  margin-top: 4px;
+  font-size: 0.85em;
+  font-style: italic;
+  color: #c8f0d0;
+}
+
+.spc-sigil {
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.spc-sigil img {
+  max-height: 80px;
+  opacity: 0.85;
+}
+
+.spc-sigil-caption {
+  text-align: center;
+  margin-top: 4px;
+  font-size: 0.75em;
+  line-height: 1.2;
+}
+
+.spc-error {
+  color: #ff6666;
+}

@@ -12,6 +12,7 @@ services:
       - ./modules/MMM-Dad-Jokes:/opt/magic_mirror/modules/MMM-Dad-Jokes
       - ./modules/MMM-SolarPicture:/opt/magic_mirror/modules/MMM-SolarPicture
       - ./modules/MMM-PreciousMetals:/opt/magic_mirror/modules/MMM-PreciousMetals
+      - ./modules/Solomon-Cal-Magic-Mirror/MMM-SolomonicPrayerClock:/opt/magic_mirror/modules/MMM-SolomonicPrayerClock
     environment:
       MM_SCENARIO: server
       MM_OVERRIDE_DEFAULT_MODULES: "true"

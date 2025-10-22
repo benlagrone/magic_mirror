@@ -111,6 +111,20 @@ let config = {
         metals: ["gold", "silver"],
         updateInterval: 3 * 60 * 60 * 1000
       }
+    },
+    {
+      module: "MMM-SolomonicPrayerClock",
+      position: "bottom_right",
+      config: {
+        latitude: 29.7604,
+        longitude: -95.3698,
+        theme: "expanded",
+        showSigils: true,
+        showUpcoming: true,
+        psalmDisplayMode: "cycle",
+        focusAreas: ["wisdom", "wealth", "health", "influence"],
+        locale: "en"
+      }
     }
   ]
 };

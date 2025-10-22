@@ -1,0 +1,78 @@
+{
+  "wisdom": [
+    {
+      "ref": "Proverbs 1",
+      "snippet": "The fear of the Lord is the beginning of knowledge."
+    },
+    {
+      "ref": "Psalm 111:10",
+      "snippet": "The fear of the Lord is the beginning of wisdom."
+    },
+    {
+      "ref": "Psalm 119:97",
+      "snippet": "Oh, how I love your law! I meditate on it all day long."
+    },
+    {
+      "ref": "Proverbs 3:5\u20136",
+      "snippet": "Trust in the Lord with all your heart..."
+    },
+    {
+      "ref": "Proverbs 4:7",
+      "snippet": "Wisdom is the principal thing; therefore get wisdom..."
+    }
+  ],
+  "wealth": [
+    {
+      "ref": "Psalm 112",
+      "snippet": "Wealth and riches are in his house, and his righteousness endures forever."
+    },
+    {
+      "ref": "Proverbs 10:22",
+      "snippet": "The blessing of the Lord brings wealth, without painful toil for it."
+    },
+    {
+      "ref": "Psalm 1",
+      "snippet": "Whatever they do prospers."
+    },
+    {
+      "ref": "Psalm 128:2",
+      "snippet": "You will eat the fruit of your labor; blessings and prosperity will be yours."
+    }
+  ],
+  "health": [
+    {
+      "ref": "Psalm 103:2\u20135",
+      "snippet": "Who forgives all your sins and heals all your diseases..."
+    },
+    {
+      "ref": "Psalm 91",
+      "snippet": "With long life I will satisfy him and show him my salvation."
+    },
+    {
+      "ref": "Proverbs 3:7-8",
+      "snippet": "This will bring health to your body and nourishment to your bones."
+    },
+    {
+      "ref": "Jeremiah 30:17",
+      "snippet": "I will restore you to health and heal your wounds."
+    }
+  ],
+  "influence": [
+    {
+      "ref": "Psalm 72",
+      "snippet": "All nations will be blessed through him, and they will call him blessed."
+    },
+    {
+      "ref": "Proverbs 22:29",
+      "snippet": "Do you see someone skilled in their work? They will serve before kings..."
+    },
+    {
+      "ref": "Psalm 45",
+      "snippet": "You are the most excellent of men and your lips have been anointed with grace..."
+    },
+    {
+      "ref": "Daniel 1:20",
+      "snippet": "He found them ten times better than all the magicians and enchanters..."
+    }
+  ]
+}
