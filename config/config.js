@@ -27,20 +27,20 @@ let config = {
       "timezone":"America/Chicago"
       }
     },
-    {
-      module: "calendar",
-      header: "US Holidays",
-      position: "top_left",
-      config: {
-        calendars: [
-          {
-            fetchInterval: 7 * 24 * 60 * 60 * 1000,
-            symbol: "calendar-check",
-            url: "https://ics.calendarlabs.com/76/mm3137/US_Holidays.ics"
-          }
-        ]
-      }
-    },
+    // {
+    //   module: "calendar",
+    //   header: "US Holidays",
+    //   position: "top_left",
+    //   config: {
+    //     calendars: [
+    //       {
+    //         fetchInterval: 7 * 24 * 60 * 60 * 1000,
+    //         symbol: "calendar-check",
+    //         url: "https://ics.calendarlabs.com/76/mm3137/US_Holidays.ics"
+    //       }
+    //     ]
+    //   }
+    // },
     {
       module: "compliments",
       position: "lower_third"
@@ -66,22 +66,22 @@ let config = {
         lon: -95.5262739
       }
     },
-    {
-      module: "newsfeed",
-      position: "bottom_bar",
-      config: {
-        feeds: [
-          {
-            title: "New York Times",
-            url: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
-          }
-        ],
-        showSourceTitle: true,
-        showPublishDate: true,
-        broadcastNewsFeeds: true,
-        broadcastNewsUpdates: true
-      }
-    },
+    // {
+    //   module: "newsfeed",
+    //   position: "bottom_bar",
+    //   config: {
+    //     feeds: [
+    //       {
+    //         title: "New York Times",
+    //         url: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+    //       }
+    //     ],
+    //     showSourceTitle: true,
+    //     showPublishDate: true,
+    //     broadcastNewsFeeds: true,
+    //     broadcastNewsUpdates: true
+    //   }
+    // },
     {
       module: "MMM-Dad-Jokes",
       position: "bottom_right",
@@ -107,18 +107,18 @@ let config = {
       header: "Precious Metals",
       position: "top_center",
       config: {
-        apiKey: "YOUR_METALS_DEV_API_KEY",
+        apiKey: "MDXNUPXAORCFW5VREG5E939VREG5E",
         metals: ["gold", "silver"],
         updateInterval: 3 * 60 * 60 * 1000
       }
     },
     {
       module: "MMM-SolomonicPrayerClock",
-      position: "bottom_left",
+      position: "top_left",
       config: {
         latitude: 29.7604,
         longitude: -95.3698,
-        rotationIntervalSeconds: 20,
+        rotationIntervalSeconds: 30,
         theme: "expanded",
         showSigils: true,
         showUpcoming: false,
