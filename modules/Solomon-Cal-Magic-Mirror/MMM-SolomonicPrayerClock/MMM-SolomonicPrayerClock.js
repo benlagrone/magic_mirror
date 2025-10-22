@@ -13,7 +13,8 @@ Module.register("MMM-SolomonicPrayerClock", {
     focusAreas: ["wisdom", "wealth", "health", "influence"],
     locale: "en",
     updateInterval: 60 * 1000,
-    rotationInterval: 10 * 1000
+    rotationInterval: 10 * 1000,
+    rotationIntervalSeconds: null
   },
 
   requiresVersion: "2.18.0",
@@ -62,7 +63,7 @@ Module.register("MMM-SolomonicPrayerClock", {
       clearInterval(this.rotationTimer);
     }
 
-    const interval = Math.max(this.config.rotationInterval, 5000);
+    const interval = this.getRotationInterval();
     this.rotationTimer = setInterval(() => {
       this.rotationIndex = (this.rotationIndex + 1) % this.views.length;
       this.updateDom();
@@ -326,6 +327,18 @@ Module.register("MMM-SolomonicPrayerClock", {
     }
 
     return wrapper;
+  },
+
+  getRotationInterval() {
+    const seconds = Number(this.config.rotationIntervalSeconds);
+    if (!Number.isNaN(seconds) && seconds > 0) {
+      return Math.max(seconds * 1000, 5000);
+    }
+    const interval = Number(this.config.rotationInterval);
+    if (!Number.isNaN(interval) && interval > 0) {
+      return Math.max(interval, 5000);
+    }
+    return 10 * 1000;
   },
 
   normaliseCitation(entry, fallbackRef) {

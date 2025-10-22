@@ -35,7 +35,7 @@ npm install
     focusAreas: ["wisdom", "wealth", "health", "influence"],
     locale: "en",
     updateInterval: 60 * 1000,
-    rotationInterval: 10 * 1000
+    rotationIntervalSeconds: 15     // override front-end cycle (seconds); fallback rotationInterval (ms)
   }
 }
 ```

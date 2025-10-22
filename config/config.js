@@ -118,6 +118,7 @@ let config = {
       config: {
         latitude: 29.7604,
         longitude: -95.3698,
+        rotationIntervalSeconds: 20,
         theme: "expanded",
         showSigils: true,
         showUpcoming: false,
