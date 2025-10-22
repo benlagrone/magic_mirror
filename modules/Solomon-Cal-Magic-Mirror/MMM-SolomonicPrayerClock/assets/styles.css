@@ -64,8 +64,9 @@
   text-decoration: underline;
 }
 
-.spc-citation-snippet {
-  font-style: normal;
+.spc-citation-clickable:focus {
+  outline: 2px solid rgba(200, 200, 255, 0.6);
+  outline-offset: 2px;
 }
 
 .modal.spc-modal {

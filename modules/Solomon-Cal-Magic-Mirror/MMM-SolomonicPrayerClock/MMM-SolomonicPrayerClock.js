@@ -34,6 +34,8 @@ Module.register("MMM-SolomonicPrayerClock", {
     this.modalBody = null;
     this.modalTranslation = null;
     this.activeChapterRequests = {};
+    this.serviceUrl = this.config.verseServiceUrl || null;
+    this.serviceTranslation = this.config.verseTranslation || "KJV";
     this.views = ["day", "current"];
     if (this.config.showUpcoming) {
       this.views.push("next");
@@ -54,6 +56,14 @@ Module.register("MMM-SolomonicPrayerClock", {
         this.loaded = true;
         this.error = null;
         this.payload = payload;
+        if (payload.verseServiceUrl) {
+          this.serviceUrl = payload.verseServiceUrl;
+          this.config.verseServiceUrl = payload.verseServiceUrl;
+        }
+        if (payload.verseTranslation) {
+          this.serviceTranslation = payload.verseTranslation;
+          this.config.verseTranslation = payload.verseTranslation;
+        }
         this.ensureRotationInterval();
         this.updateDom();
         break;
@@ -362,7 +372,15 @@ Module.register("MMM-SolomonicPrayerClock", {
 
     if (this.canRequestChapter(citation)) {
       container.classList.add("spc-citation-clickable");
+      container.setAttribute("role", "button");
+      container.setAttribute("tabindex", "0");
       container.addEventListener("click", () => this.openChapterModal(citation));
+      container.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          this.openChapterModal(citation);
+        }
+      });
     }
 
     container.appendChild(ref);
@@ -432,7 +450,7 @@ Module.register("MMM-SolomonicPrayerClock", {
   canRequestChapter(citation) {
     const request = citation?.request;
     return (
-      !!this.config.verseServiceUrl &&
+      !!this.serviceUrl &&
       request &&
       request.book &&
       request.chapter
@@ -448,7 +466,7 @@ Module.register("MMM-SolomonicPrayerClock", {
     const chapterRequest = {
       book: request.book,
       chapter: request.chapter,
-      translation: request.translation || this.config.verseTranslation || "KJV"
+      translation: request.translation || this.serviceTranslation || "KJV"
     };
 
     this.activeChapterRequests = {};
@@ -551,7 +569,8 @@ Module.register("MMM-SolomonicPrayerClock", {
 
     const titleText = reference || "Chapter";
     this.modalTitle.textContent = titleText;
-    this.modalTranslation.textContent = translation ? `Translation: ${translation}` : "";
+    const resolvedTranslation = translation || this.serviceTranslation;
+    this.modalTranslation.textContent = resolvedTranslation ? `Translation: ${resolvedTranslation}` : "";
 
     this.modalBody.textContent = "";
     if (error) {
@@ -602,7 +621,8 @@ Module.register("MMM-SolomonicPrayerClock", {
     if (payload?.error) {
       this.showChapterModal({
         reference: pending.reference,
-        error: payload.error
+        error: payload.error,
+        translation: this.serviceTranslation
       });
       return;
     }

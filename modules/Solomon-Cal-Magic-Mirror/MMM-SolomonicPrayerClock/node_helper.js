@@ -192,6 +192,8 @@ module.exports = NodeHelper.create({
       generatedAt: now,
       sunrise: hours[0]?.start,
       sunset: hours[12]?.start,
+      verseServiceUrl: this.verseServiceUrl,
+      verseTranslation: this.verseTranslation,
       dayInfo: {
         ...dayInfo,
         planetLabel: dayInfo.planetLabel || getPlanetInfo(dayInfo.planetKey)?.label || "",
