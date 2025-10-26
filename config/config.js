@@ -41,10 +41,10 @@ let config = {
     //     ]
     //   }
     // },
-    {
-      module: "compliments",
-      position: "lower_third"
-    },
+    // {
+    //   module: "compliments",
+    //   position: "lower_third"
+    // },
     {
       module: "weather",
       position: "top_right",
@@ -94,7 +94,7 @@ let config = {
     },
     {
       module: "MMM-SolarPicture",
-      position: "middle_center",
+      position: "top_center",
       config: {
         imageType: "AIA 304",
         updateInterval: 60 * 60 * 1000,
@@ -102,19 +102,28 @@ let config = {
         maxMediaHeight: 400
       }
     },
+    // {
+    //   module: "MMM-PreciousMetals",
+    //   header: "Precious Metals",
+    //   position: "top_center",
+    //   config: {
+    //     apiKey: "MDXNUPXAORCFW5VREG5E939VREG5E",
+    //     metals: ["gold", "silver"],
+    //     updateInterval: 3 * 60 * 60 * 1000
+    //   }
+    // },
     {
-      module: "MMM-PreciousMetals",
-      header: "Precious Metals",
-      position: "top_center",
+      module: "MMM-Pollen",
+      header: "Pollen Forecast",
+      position: "top_left",
       config: {
-        apiKey: "MDXNUPXAORCFW5VREG5E939VREG5E",
-        metals: ["gold", "silver"],
-        updateInterval: 3 * 60 * 60 * 1000
+        updateInterval: 3 * 60 * 60 * 1000,
+        zip_code: "77024"
       }
     },
     {
       module: "MMM-SolomonicPrayerClock",
-      position: "top_left",
+      position: "bottom_left",
       config: {
         latitude: 29.7604,
         longitude: -95.3698,
