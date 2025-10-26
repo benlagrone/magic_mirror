@@ -115,7 +115,7 @@ let config = {
     {
       module: "MMM-Pollen",
       header: "Pollen Forecast",
-      position: "bottom_right",
+      position: "top_left",
       config: {
         updateInterval: 3 * 60 * 60 * 1000,
         zip_code: "77024"
