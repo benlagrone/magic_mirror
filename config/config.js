@@ -102,6 +102,17 @@ let config = {
         maxMediaHeight: 400
       }
     },
+    {
+      module: "MMM-GooglePhotos",
+      position: "GalleryDen2",
+      config: {
+        localAlbumName: "Album_name",
+        localScanInterval: 10 * 60 * 1000,
+        updateInterval: 60 * 1000,
+        showWidth: 800,
+        showHeight: 600
+      }
+    },
     // {
     //   module: "MMM-PreciousMetals",
     //   header: "Precious Metals",

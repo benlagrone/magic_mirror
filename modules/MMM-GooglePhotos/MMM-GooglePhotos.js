@@ -8,6 +8,9 @@ Module.register("MMM-GooglePhotos", {
     updateInterval: 1000 * 30, // minimum 10 seconds.
     sort: "new", // "old", "random"
     uploadAlbum: null, // Only for created by `create_uploadable_album.js`
+    localAlbumName: null,
+    localAlbumPath: null,
+    localScanInterval: null,
     condition: {
       fromDate: null, // Or "2018-03", RFC ... format available
       toDate: null, // Or "2019-12-25",
@@ -63,7 +66,7 @@ Module.register("MMM-GooglePhotos", {
       this.uploadableAlbum = payload;
     }
     if (noti === "INITIALIZED") {
-      this.albums = payload;
+      this.albums = payload || [];
       //set up timer once initialized, more robust against faults
       if (!this.updateTimer || this.updateTimer === null) {
         Log.info("Start timer for updating photos.");
@@ -130,12 +133,15 @@ Module.register("MMM-GooglePhotos", {
       return;
     }
     this.index = this.index + dir; //only used for reversing
-    if (this.index < 0) this.index = this.scanned.length + this.index;
+   if (this.index < 0) this.index = this.scanned.length + this.index;
     if (this.index >= this.scanned.length) {
       this.index -= this.scanned.length;
     }
     let target = this.scanned[this.index];
-    let url = target.baseUrl + `=w${this.config.showWidth}-h${this.config.showHeight}`;
+    let url = target.baseUrl;
+    if (!target.isLocal) {
+      url = target.baseUrl + `=w${this.config.showWidth}-h${this.config.showHeight}`;
+    }
     this.ready(url, target);
     this.index++;
     if (this.index >= this.scanned.length) {
@@ -172,7 +178,7 @@ Module.register("MMM-GooglePhotos", {
     current.style.backgroundImage = `url(${url})`;
     current.classList.add("animated");
     const info = document.getElementById("GPHOTO_INFO");
-    const album = Array.isArray(this.albums) ? this.albums.find((a) => a.id === target._albumId) : { id: -1, title: '' };
+    const album = Array.isArray(this.albums) ? this.albums.find((a) => a.id === target._albumId) : null;
     if (this.config.autoInfoPosition) {
       let op = (album, target) => {
         let now = new Date();
@@ -195,21 +201,39 @@ Module.register("MMM-GooglePhotos", {
       info.style.setProperty("--right", right);
     }
     info.innerHTML = "";
-    let albumCover = document.createElement("div");
-    albumCover.classList.add("albumCover");
-    albumCover.style.backgroundImage = `url(modules/MMM-GooglePhotos/cache/${album.id})`;
-    let albumTitle = document.createElement("div");
-    albumTitle.classList.add("albumTitle");
-    albumTitle.innerHTML = album.title;
-    let photoTime = document.createElement("div");
-    photoTime.classList.add("photoTime");
-    photoTime.innerHTML = this.config.timeFormat === "relative" ? moment(target.mediaMetadata.creationTime).fromNow() : moment(target.mediaMetadata.creationTime).format(this.config.timeFormat);
+    if (album && album.id !== "local") {
+      let albumCover = document.createElement("div");
+      albumCover.classList.add("albumCover");
+      albumCover.style.backgroundImage = `url(modules/MMM-GooglePhotos/cache/${album.id})`;
+      info.appendChild(albumCover);
+    }
+
     let infoText = document.createElement("div");
     infoText.classList.add("infoText");
+    if (!album || album.id === "local") {
+      infoText.classList.add("noCover");
+    }
 
-    info.appendChild(albumCover);
+    const titleText = album ? album.title : target._albumTitle || "Local Album";
+    let albumTitle = document.createElement("div");
+    albumTitle.classList.add("albumTitle");
+    albumTitle.innerHTML = titleText;
     infoText.appendChild(albumTitle);
-    infoText.appendChild(photoTime);
+
+    if (target.mediaMetadata && target.mediaMetadata.creationTime) {
+      let photoTime = document.createElement("div");
+      photoTime.classList.add("photoTime");
+      photoTime.innerHTML = this.config.timeFormat === "relative" ? moment(target.mediaMetadata.creationTime).fromNow() : moment(target.mediaMetadata.creationTime).format(this.config.timeFormat);
+      infoText.appendChild(photoTime);
+    }
+
+    if (target.filename) {
+      let fileName = document.createElement("div");
+      fileName.classList.add("photoFilename");
+      fileName.innerHTML = target.filename;
+      infoText.appendChild(fileName);
+    }
+
     info.appendChild(infoText);
     this.sendSocketNotification("IMAGE_LOADED", { id: target.id, index: this.index });
   },

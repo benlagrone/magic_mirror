@@ -94,3 +94,15 @@
   line-height:100%;
   color:#FFF;
 }
+
+#GPHOTO_INFO .infoText.noCover {
+  float:none;
+  margin-left: 0;
+  padding-right: 0;
+}
+
+#GPHOTO_INFO .photoFilename {
+  color:#DDD;
+  font-size:14px;
+  margin-top:4px;
+}

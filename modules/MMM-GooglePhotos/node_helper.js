@@ -1,12 +1,13 @@
 "use strict";
 
 const fs = require("fs");
-const { writeFile, readFile } = require("fs/promises");
+const { writeFile, readFile, appendFile, mkdir, stat, readdir } = require("fs/promises");
 const path = require("path");
 const moment = require("moment");
 const { Readable } = require("stream");
 const { finished } = require("stream/promises");
 const { RE2 } = require("re2-wasm");
+const os = require("os");
 const { Set } = require('immutable');
 const NodeHelper = require("node_helper");
 const Log = require("logger");
@@ -43,6 +44,12 @@ const NodeHeleprObject = {
     this.CACHE_ALBUMNS_PATH = path.resolve(this.path, "cache", "selecetedAlbumsCache.json");
     this.CACHE_PHOTOLIST_PATH = path.resolve(this.path, "cache", "photoListCache.json");
     this.CACHE_CONFIG = path.resolve(this.path, "cache", "config.json");
+    this.localMode = false;
+    this.localAlbumPath = null;
+    this.localAlbumName = null;
+    this.localRouteInitialized = false;
+    this.localPhotoSignature = null;
+    this.logFilePath = path.resolve(this.path, "logs", "activity.log");
   },
 
   socketNotificationReceived: function (notification, payload) {
@@ -61,7 +68,12 @@ const NodeHeleprObject = {
             this.log_error("[GPHOTO] hidden.onerror error", error.message, error.name, error.stack);
           }
           this.log_error("Image loading fails. Check your network.:", url);
-          this.prepAndSendChunk(Math.ceil((20 * 60 * 1000) / this.config.updateInterval)).then(); // 20min * 60s * 1000ms / updateinterval in ms
+          this.appendLog(`IMAGE_LOAD_FAIL: ${url || "unknown"}`).catch(() => {});
+          if (this.localMode) {
+            this.sendLocalPhotos();
+          } else {
+            this.prepAndSendChunk(Math.ceil((20 * 60 * 1000) / this.config.updateInterval)).then(); // 20min * 60s * 1000ms / updateinterval in ms
+          }
         }
         break;
       case "IMAGE_LOADED":
@@ -72,8 +84,13 @@ const NodeHeleprObject = {
         break;
       case "NEED_MORE_PICS":
         {
-          this.log_info("Used last pic in list");
-          this.prepAndSendChunk(Math.ceil((20 * 60 * 1000) / this.config.updateInterval)).then(); // 20min * 60s * 1000ms / updateinterval in ms
+          if (this.localMode) {
+            this.log_info("Local mode: refreshing photo list");
+            this.sendLocalPhotos();
+          } else {
+            this.log_info("Used last pic in list");
+            this.prepAndSendChunk(Math.ceil((20 * 60 * 1000) / this.config.updateInterval)).then(); // 20min * 60s * 1000ms / updateinterval in ms
+          }
         }
         break;
       case "MODULE_SUSPENDED_SKIP_UPDATE":
@@ -117,6 +134,21 @@ const NodeHeleprObject = {
   initializeAfterLoading: function (config) {
     this.config = config;
     this.debug = config.debug ? config.debug : false;
+    this.ensureLogDirectory().catch(() => {});
+
+    if (config.localAlbumName || config.localAlbumPath) {
+      this.localMode = true;
+      if (!this.config.scanInterval || this.config.scanInterval < 1000 * 60) {
+        const requested = this.config.localScanInterval || this.config.scanInterval;
+        this.config.scanInterval = requested && requested >= 1000 * 10 ? requested : 1000 * 60 * 5;
+      }
+      this.initializeLocalMode(config).catch((err) => {
+        this.log_error("Failed to initialize local album mode");
+        this.log_error(error_to_string(err));
+      });
+      return;
+    }
+
     if (!this.config.scanInterval || this.config.scanInterval < 1000 * 60 * 10) this.config.scanInterval = 1000 * 60 * 10;
     GPhotos = new GP({
       authOption: authOption,
@@ -215,6 +247,172 @@ const NodeHeleprObject = {
       }
     }
 
+  },
+
+  initializeLocalMode: async function (config) {
+    try {
+      this.localAlbumPath = this.resolveLocalAlbumPath(config);
+      this.localAlbumName = config.localAlbumName || path.basename(this.localAlbumPath);
+      if (!fs.existsSync(this.localAlbumPath)) {
+        const message = `Local album path not found: ${this.localAlbumPath}`;
+        await this.appendLog(message);
+        this.log_error(message);
+        this.sendSocketNotification("ERROR", message);
+        return;
+      }
+      this.setupLocalRoute();
+      await this.appendLog(`Local album mode enabled. Watching: ${this.localAlbumPath}`);
+      this.sendSocketNotification("UPDATE_STATUS", `Loading ${this.localAlbumName}...`);
+      await this.loadLocalPhotos(true);
+      const albumMeta = [{ id: "local", title: this.localAlbumName }];
+      this.sendSocketNotification("INITIALIZED", albumMeta);
+      this.sendSocketNotification("UPDATE_ALBUMS", albumMeta);
+      this.sendSocketNotification("CLEAR_ERROR");
+      this.sendSocketNotification("MORE_PICS", this.localPhotoList);
+      clearInterval(this.scanTimer);
+      this.scanTimer = setInterval(() => {
+        this.loadLocalPhotos().catch((err) => {
+          this.log_error("Local album refresh failed");
+          this.log_error(error_to_string(err));
+        });
+      }, this.config.scanInterval);
+      await this.appendLog(`Initial load complete. ${this.localPhotoList.length} image(s) available.`);
+    } catch (err) {
+      await this.appendLog(`Failed to initialise local album mode: ${err.message}`);
+      throw err;
+    }
+  },
+
+  resolveLocalAlbumPath: function (config) {
+    if (config.localAlbumPath) {
+      return this.expandHome(config.localAlbumPath);
+    }
+    if (config.localAlbumName) {
+      return path.resolve(os.homedir(), "Pictures", config.localAlbumName);
+    }
+    throw new Error("localAlbumName or localAlbumPath must be provided for local album mode.");
+  },
+
+  expandHome: function (inputPath) {
+    if (!inputPath) return inputPath;
+    if (inputPath === "~") return os.homedir();
+    if (inputPath.startsWith("~/")) {
+      return path.join(os.homedir(), inputPath.slice(2));
+    }
+    return path.resolve(inputPath);
+  },
+
+  setupLocalRoute: function () {
+    if (this.localRouteInitialized) return;
+    const routeBase = `/${this.name}/local`;
+    this.expressApp.get(`${routeBase}/:filename`, (req, res) => {
+      if (!this.localAlbumPath) {
+        res.status(404).send("Album not configured");
+        return;
+      }
+      const safeName = path.basename(req.params.filename);
+      const filePath = path.join(this.localAlbumPath, safeName);
+      if (!filePath.startsWith(this.localAlbumPath)) {
+        res.status(400).send("Invalid file");
+        return;
+      }
+      res.sendFile(filePath, (err) => {
+        if (err) {
+          this.log_error("Unable to serve local photo:", filePath, err.message);
+        }
+      });
+    });
+    this.localRouteInitialized = true;
+  },
+
+  loadLocalPhotos: async function (force = false) {
+    if (!this.localAlbumPath) return;
+    try {
+      const entries = await readdir(this.localAlbumPath, { withFileTypes: true });
+      const files = entries
+        .filter((entry) => entry.isFile())
+        .map((entry) => entry.name)
+        .filter((name) => /\.(jpe?g|png|gif|webp)$/i.test(name));
+      const detailed = (
+        await Promise.all(
+          files.map(async (filename) => {
+            try {
+              const fullPath = path.join(this.localAlbumPath, filename);
+              const stats = await stat(fullPath);
+              return {
+                filename,
+                mtimeMs: stats.mtimeMs,
+                ctime: stats.birthtime || stats.mtime,
+              };
+            } catch (error) {
+              this.log_warn("Failed to stat local photo:", filename, error.message);
+              await this.appendLog(`Stat failed for ${filename}: ${error.message}`);
+              return null;
+            }
+          })
+        )
+      ).filter(Boolean);
+      detailed.sort((a, b) => b.mtimeMs - a.mtimeMs);
+      const signature = detailed.map((info) => `${info.filename}:${info.mtimeMs}`).join("|");
+      if (!force && signature === this.localPhotoSignature) {
+        return;
+      }
+      this.localPhotoSignature = signature;
+      this.localPhotoList = detailed.map((info) => ({
+        id: info.filename,
+        baseUrl: `/${this.name}/local/${encodeURIComponent(info.filename)}`,
+        filename: info.filename,
+        mediaMetadata: {
+          creationTime: new Date(info.ctime).toISOString(),
+        },
+        _albumId: "local",
+        _albumTitle: this.localAlbumName,
+        isLocal: true,
+      }));
+      this.photos = [...this.localPhotoList];
+      this.localPhotoPntr = 0;
+      this.lastLocalPhotoPntr = 0;
+      await this.appendLog(`Local album refreshed. ${this.localPhotoList.length} image(s) detected.`);
+    } catch (err) {
+      await this.appendLog(`Failed to read local album: ${err.message}`);
+      this.log_error("Failed to read local album");
+      this.log_error(error_to_string(err));
+      this.sendSocketNotification("ERROR", `Unable to read local album: ${err.message}`);
+    }
+  },
+
+  sendLocalPhotos: function () {
+    if (!this.localPhotoList || this.localPhotoList.length === 0) {
+      this.loadLocalPhotos(true).catch((err) => {
+        this.log_error("Unable to load local photos on demand");
+        this.log_error(error_to_string(err));
+      });
+      return;
+    }
+    this.sendSocketNotification("MORE_PICS", this.localPhotoList);
+  },
+
+  ensureLogDirectory: async function () {
+    const dir = path.dirname(this.logFilePath);
+    try {
+      await mkdir(dir, { recursive: true });
+    } catch (err) {
+      this.log_error("Unable to create log directory:", dir, err.message);
+    }
+  },
+
+  appendLog: async function (...messages) {
+    const line = `[${new Date().toISOString()}] ${messages.join(" ")}\n`;
+    try {
+      await appendFile(this.logFilePath, line);
+    } catch (err) {
+      if (err.code === "ENOENT") {
+        await this.ensureLogDirectory();
+        await appendFile(this.logFilePath, line);
+      } else {
+        this.log_error("Unable to write log entry:", err.message);
+      }
+    }
   },
 
   prepAndSendChunk: async function (desiredChunk = 50) {
