@@ -1,4 +1,47 @@
-/* Override MagicMirror's default cursor hiding */
-Html {
-  Cursor: default; 
-  }
+/* Keep cursor visible when hovering */
+html {
+  cursor: default;
+}
+
+/* Brighten text and add a subtle shadow against photos */
+body,
+.module,
+.module * {
+  color: #f5f5f5;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.55);
+}
+
+/* Soft translucent background behind each module for legibility */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.module {
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 16px;
+  padding: 12px 18px;
+}
+
+.region .module:first-child {
+  margin-top: 8px;
+}
+
+/* Ensure headers stay legible as well */
+.module header {
+  color: #ffffff;
+  text-shadow: 0 0 14px rgba(0, 0, 0, 0.6);
+}
+.module .module {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
