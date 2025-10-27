@@ -77,6 +77,7 @@ module.exports = NodeHelper.create({
 
     try {
       const files = await this.collectFiles(instance.directory, instance.includeSubdirectories);
+      console.log(`[MMM-EasyPix] Loaded ${files.length} file(s) for ${identifier} from ${instance.directory}`);
       this.sendSocketNotification("EASYPIX_FILE_LIST", { identifier, files });
     } catch (error) {
       const message = `MMM-EasyPix: ${error.message}`;
@@ -138,7 +139,8 @@ module.exports = NodeHelper.create({
   ensureRoute () {
     if (this.routeInitialized) return;
 
-    this.expressApp.get(`/${this.name}/local/:instanceId/*`, (req, res) => {
+    const routePattern = `/${this.name}/local/:instanceId/:filePath(*)`;
+    this.expressApp.get(routePattern, (req, res) => {
       const instanceId = req.params.instanceId;
       const instance = this.instances.get(instanceId);
 
@@ -147,7 +149,7 @@ module.exports = NodeHelper.create({
         return;
       }
 
-      const requestedPath = req.params[0] || "";
+      const requestedPath = req.params.filePath || "";
       const safeRelative = path.normalize(requestedPath).replace(/^(\.\.(\/|\\|$))+/g, "");
       const absolutePath = path.join(instance.directory, safeRelative);
 
@@ -159,6 +161,9 @@ module.exports = NodeHelper.create({
       res.sendFile(absolutePath, (error) => {
         if (error) {
           console.error(`MMM-EasyPix failed to send ${absolutePath}: ${error.message}`);
+        }
+        else {
+          console.log(`[MMM-EasyPix] Served ${absolutePath}`);
         }
       });
     });

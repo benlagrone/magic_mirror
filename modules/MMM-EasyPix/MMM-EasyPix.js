@@ -92,6 +92,11 @@ Module.register("MMM-EasyPix", {
     const file = this.files[this.currentIndex];
     const encoded = encodeURIComponent(file).replace(/%2F/g, "/");
     this.imageUrl = `${this.baseLocalUrl}/${encoded}`;
+    if (typeof Log !== "undefined" && Log.info) {
+      Log.info(`[MMM-EasyPix] Next image: ${this.imageUrl}`);
+    } else {
+      console.log(`[MMM-EasyPix] Next image: ${this.imageUrl}`);
+    }
   },
 
   socketNotificationReceived (notification, payload) {
@@ -104,6 +109,7 @@ Module.register("MMM-EasyPix", {
       this.files = payload.files || [];
       this.currentIndex = -1;
       this.loaded = true;
+      console.log(`[MMM-EasyPix] Received ${this.files.length} file(s)`);
       if (this.files.length > 0) {
         this.advanceImage();
       } else {
@@ -117,6 +123,7 @@ Module.register("MMM-EasyPix", {
       this.files = [];
       this.imageUrl = null;
       this.loaded = true;
+      console.error(`[MMM-EasyPix] Error: ${payload.message}`);
       this.updateDom(this.config.animationSpeed || 0);
     }
   },
