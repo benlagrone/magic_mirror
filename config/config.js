@@ -104,9 +104,9 @@ let config = {
     },
     {
       module: "MMM-GooglePhotos",
-      position: "GalleryDen2",
+      position: "top_center",
       config: {
-        localAlbumName: "Album_name",
+        localAlbumName: "GalleryDen2",
         localScanInterval: 10 * 60 * 1000,
         updateInterval: 60 * 1000,
         showWidth: 800,
