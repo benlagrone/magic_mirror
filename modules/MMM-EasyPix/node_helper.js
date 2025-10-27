@@ -139,7 +139,7 @@ module.exports = NodeHelper.create({
   ensureRoute () {
     if (this.routeInitialized) return;
 
-    const routePattern = `/${this.name}/local/:instanceId/:filePath(*)`;
+    const routePattern = `/${this.name}/local/:instanceId/:filePath(.*)`;
     this.expressApp.get(routePattern, (req, res) => {
       const instanceId = req.params.instanceId;
       const instance = this.instances.get(instanceId);
