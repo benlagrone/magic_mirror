@@ -106,8 +106,8 @@ let config = {
       module: "MMM-EasyPix",
       position: "fullscreen_below",
       config: {
-        galleryPath: "/opt/magic_mirror/external_pics/GalleryDen2",
-        includeSubdirectories: true,
+        galleryPath: "http://192.168.86.23:8080/GalleryDen2",
+        includeSubdirectories: false,
         randomOrder: true,
         allowImmediateRepeats: false,
         galleryReloadInterval: 5 * 60 * 1000,

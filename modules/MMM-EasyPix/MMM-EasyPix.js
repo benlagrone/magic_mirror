@@ -90,8 +90,14 @@ Module.register("MMM-EasyPix", {
     }
 
     const file = this.files[this.currentIndex];
-    const encoded = encodeURIComponent(file).replace(/%2F/g, "/");
-    this.imageUrl = `${this.baseLocalUrl}/${encoded}`;
+    if (this.config.galleryPath.startsWith("http")) {
+      const base = this.config.galleryPath.replace(/\/$/, "");
+      const safeFile = file.replace(/\\/g, "/");
+      this.imageUrl = `${base}/${safeFile}`;
+    } else {
+      const encoded = encodeURIComponent(file).replace(/%2F/g, "/");
+      this.imageUrl = `${this.baseLocalUrl}/${encoded}`;
+    }
     if (typeof Log !== "undefined" && Log.info) {
       Log.info(`[MMM-EasyPix] Next image: ${this.imageUrl}`);
     } else {

@@ -33,15 +33,19 @@ module.exports = NodeHelper.create({
     const directory = this.resolvePath(config.galleryPath);
     const includeSubdirectories = Boolean(config.includeSubdirectories);
     const reloadInterval = Number(config.galleryReloadInterval);
+    const isRemote = /^https?:\/\//i.test(directory || "");
 
     this.instances.set(identifier, {
       directory,
+      remote: isRemote,
       includeSubdirectories,
       reloadInterval: !isNaN(reloadInterval) && reloadInterval > 0 ? reloadInterval : null,
       timer: null
     });
 
-    this.ensureRoute();
+    if (!isRemote) {
+      this.ensureRoute();
+    }
     await this.refreshInstance(identifier, true);
     this.setupReloadTimer(identifier);
   },
@@ -66,6 +70,11 @@ module.exports = NodeHelper.create({
     const instance = this.instances.get(identifier);
     if (!instance) return;
 
+    if (instance.remote) {
+      await this.refreshRemote(identifier, instance, logErrors);
+      return;
+    }
+
     try {
       await access(instance.directory, fs.constants.R_OK);
     } catch (error) {
@@ -81,6 +90,18 @@ module.exports = NodeHelper.create({
       this.sendSocketNotification("EASYPIX_FILE_LIST", { identifier, files });
     } catch (error) {
       const message = `MMM-EasyPix: ${error.message}`;
+      this.sendSocketNotification("EASYPIX_ERROR", { identifier, message });
+      if (logErrors) console.error(message);
+    }
+  },
+
+  async refreshRemote (identifier, instance, logErrors) {
+    try {
+      const list = await this.fetchRemoteFileList(instance.directory);
+      console.log(`[MMM-EasyPix] Loaded ${list.length} remote file(s) for ${identifier} from ${instance.directory}`);
+      this.sendSocketNotification("EASYPIX_FILE_LIST", { identifier, files: list });
+    } catch (error) {
+      const message = `MMM-EasyPix remote load failed: ${error.message}`;
       this.sendSocketNotification("EASYPIX_ERROR", { identifier, message });
       if (logErrors) console.error(message);
     }
@@ -116,9 +137,59 @@ module.exports = NodeHelper.create({
     return SUPPORTED_EXTENSIONS.includes(ext);
   },
 
+  async fetchRemoteFileList (baseUrl) {
+    const listUrl = `${baseUrl}/`;
+    const response = await fetch(listUrl);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status} ${response.statusText}`);
+    }
+    const html = await response.text();
+    const matches = [...html.matchAll(/href\s*=\s*"([^"]+)"/gi)];
+    const files = [];
+    const base = new URL(listUrl);
+
+    for (const match of matches) {
+      let href = match[1];
+      if (!href || href === "../") continue;
+      href = href.split("#")[0].split("?")[0];
+
+      let relativePath = href;
+      try {
+        if (/^https?:\/\//i.test(href)) {
+          const url = new URL(href);
+          if (url.origin !== base.origin) {
+            continue;
+          }
+          relativePath = url.pathname;
+        } else if (href.startsWith("/")) {
+          const url = new URL(href, base);
+          relativePath = url.pathname;
+        }
+      } catch (error) {
+        continue;
+      }
+
+      relativePath = decodeURIComponent(relativePath);
+      if (relativePath.startsWith(base.pathname)) {
+        relativePath = relativePath.slice(base.pathname.length);
+      }
+      relativePath = relativePath.replace(/^\/+/, "");
+      if (!relativePath || relativePath.endsWith("/")) continue;
+      if (!this.isSupported(relativePath)) continue;
+      files.push(relativePath);
+    }
+
+    files.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+    return files;
+  },
+
   resolvePath (inputPath) {
     if (!inputPath) {
       return path.join(this.path, "pix");
+    }
+
+    if (/^https?:\/\//i.test(inputPath)) {
+      return inputPath.replace(/\/$/, "");
     }
 
     if (inputPath === "~") {
