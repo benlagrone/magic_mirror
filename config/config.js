@@ -21,8 +21,26 @@ let config = {
       position: "top_bar"
     },
     {
+      module: "MMM-pages",
+      position: "bottom_bar",
+      config: {
+        modules: [
+          ["page-0"],
+          ["page-1"]
+        ],
+        fixed: ["alert", "updatenotification", "MMM-EasyPix"],
+        animationTime: 1000,
+        timings: {
+          default: 60 * 1000
+        },
+        rotationDelay: 20 * 1000,
+        homePage: 0
+      }
+    },
+    {
       module: "clock",
       position: "top_left",
+      classes: "page-0 page-1",
       config: {
       "timezone":"America/Chicago"
       }
@@ -48,6 +66,7 @@ let config = {
     {
       module: "weather",
       position: "top_right",
+      classes: "page-0",
       config: {
         weatherProvider: "openmeteo",
         type: "current",
@@ -58,6 +77,7 @@ let config = {
     {
       module: "weather",
       position: "top_right",
+      classes: "page-0",
       header: "Weather Forecast",
       config: {
         weatherProvider: "openmeteo",
@@ -85,6 +105,7 @@ let config = {
     {
       module: "MMM-Dad-Jokes",
       position: "bottom_right",
+      classes: "page-1",
       config: {
         updateInterval: 30 * 60 * 1000,
         fadeSpeed: 4 * 1000,
@@ -95,6 +116,7 @@ let config = {
     {
       module: "MMM-SolarPicture",
       position: "top_center",
+      classes: "page-0",
       config: {
         imageType: "AIA 304",
         updateInterval: 60 * 60 * 1000,
@@ -129,6 +151,7 @@ let config = {
       module: "MMM-Pollen",
       header: "Pollen Forecast",
       position: "top_left",
+      classes: "page-0",
       config: {
         updateInterval: 3 * 60 * 60 * 1000,
         zip_code: "77024"
@@ -137,6 +160,7 @@ let config = {
     {
       module: "MMM-SolomonicPrayerClock",
       position: "bottom_left",
+      classes: "page-1",
       config: {
         latitude: 29.7604,
         longitude: -95.3698,

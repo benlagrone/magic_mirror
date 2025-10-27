@@ -15,6 +15,7 @@ services:
       - ./modules/MMM-Pollen:/opt/magic_mirror/modules/MMM-Pollen
       - ./modules/MMM-GooglePhotos:/opt/magic_mirror/modules/MMM-GooglePhotos
       - ./modules/MMM-EasyPix:/opt/magic_mirror/modules/MMM-EasyPix
+      - ./modules/MMM-Pages:/opt/magic_mirror/modules/MMM-Pages
       - ${HOME}/Pictures/GalleryDen2:/opt/magic_mirror/external_pics/GalleryDen2:ro
       - ./modules/Solomon-Cal-Magic-Mirror/MMM-SolomonicPrayerClock:/opt/magic_mirror/modules/MMM-SolomonicPrayerClock
     environment:
