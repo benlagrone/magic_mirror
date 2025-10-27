@@ -1,0 +1,56 @@
+{
+  "name": "mmm-easypix",
+  "version": "1.1.10",
+  "description": "A module for MagicMirror² to display pictures.",
+  "keywords": [
+    "MagicMirror",
+    "images",
+    "photos",
+    "pictures"
+  ],
+  "homepage": "https://github.com/KristjanESPERANTO/MMM-EasyPix#readme",
+  "bugs": {
+    "url": "https://github.com/KristjanESPERANTO/MMM-EasyPix/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KristjanESPERANTO/MMM-EasyPix"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "mykle1",
+    "url": "https://github.com/mykle1"
+  },
+  "contributors": [
+    "https://github.com/KristjanESPERANTO/MMM-EasyPix/contributors"
+  ],
+  "type": "module",
+  "main": "MMM-EasyPix.js",
+  "scripts": {
+    "lint": "eslint && prettier --check .",
+    "lint:fix": "eslint --fix && prettier --write .",
+    "prepare": "[ -f node_modules/.bin/husky ] && husky || echo husky is not installed.",
+    "test": "node --run lint && node --run test:spelling",
+    "test:spelling": "cspell ."
+  },
+  "lint-staged": {
+    "*": [
+      "eslint --fix",
+      "prettier --write --ignore-unknown"
+    ]
+  },
+  "devDependencies": {
+    "@eslint/css": "^0.11.0",
+    "@eslint/js": "^9.34.0",
+    "@eslint/json": "^0.13.2",
+    "@eslint/markdown": "^7.2.0",
+    "@stylistic/eslint-plugin": "^5.3.1",
+    "cspell": "^9.2.1",
+    "eslint": "^9.34.0",
+    "eslint-plugin-import-x": "^4.16.1",
+    "globals": "^16.3.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
+    "prettier": "^3.6.2"
+  }
+}

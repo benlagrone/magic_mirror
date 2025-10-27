@@ -103,14 +103,16 @@ let config = {
       }
     },
     {
-      module: "MMM-GooglePhotos",
-      position: "top_center",
+      module: "MMM-EasyPix",
+      position: "fullscreen_below",
       config: {
-        localAlbumName: "GalleryDen2",
-        localScanInterval: 10 * 60 * 1000,
+        galleryPath: "/opt/magic_mirror/external_pics/GalleryDen2",
+        includeSubdirectories: true,
+        randomOrder: true,
+        allowImmediateRepeats: false,
+        galleryReloadInterval: 5 * 60 * 1000,
         updateInterval: 60 * 1000,
-        showWidth: 800,
-        showHeight: 600
+        maxWidth: "100%"
       }
     },
     // {

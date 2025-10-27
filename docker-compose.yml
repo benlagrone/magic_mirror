@@ -14,6 +14,8 @@ services:
       - ./modules/MMM-PreciousMetals:/opt/magic_mirror/modules/MMM-PreciousMetals
       - ./modules/MMM-Pollen:/opt/magic_mirror/modules/MMM-Pollen
       - ./modules/MMM-GooglePhotos:/opt/magic_mirror/modules/MMM-GooglePhotos
+      - ./modules/MMM-EasyPix:/opt/magic_mirror/modules/MMM-EasyPix
+      - ${HOME}/Pictures/GalleryDen2:/opt/magic_mirror/external_pics/GalleryDen2:ro
       - ./modules/Solomon-Cal-Magic-Mirror/MMM-SolomonicPrayerClock:/opt/magic_mirror/modules/MMM-SolomonicPrayerClock
     environment:
       MM_SCENARIO: server
