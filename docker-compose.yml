@@ -12,6 +12,8 @@ services:
       - ./modules/MMM-Dad-Jokes:/opt/magic_mirror/modules/MMM-Dad-Jokes
       - ./modules/MMM-SolarPicture:/opt/magic_mirror/modules/MMM-SolarPicture
       - ./modules/MMM-PreciousMetals:/opt/magic_mirror/modules/MMM-PreciousMetals
+      - ./modules/MMM-Pollen:/opt/magic_mirror/modules/MMM-Pollen
+      - ./modules/MMM-GooglePhotos:/opt/magic_mirror/modules/MMM-GooglePhotos
       - ./modules/Solomon-Cal-Magic-Mirror/MMM-SolomonicPrayerClock:/opt/magic_mirror/modules/MMM-SolomonicPrayerClock
     environment:
       MM_SCENARIO: server

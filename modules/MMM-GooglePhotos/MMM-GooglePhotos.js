@@ -11,6 +11,7 @@ Module.register("MMM-GooglePhotos", {
     localAlbumName: null,
     localAlbumPath: null,
     localScanInterval: null,
+    fullScreenBackground: false,
     condition: {
       fromDate: null, // Or "2018-03", RFC ... format available
       toDate: null, // Or "2019-12-25",
@@ -245,7 +246,10 @@ Module.register("MMM-GooglePhotos", {
     back.id = "GPHOTO_BACK";
     let current = document.createElement("div");
     current.id = "GPHOTO_CURRENT";
-    if (this.data.position.search("fullscreen") === -1) {
+    const isFullscreenRegion = this.data.position && this.data.position.search("fullscreen") !== -1;
+    if (this.config.fullScreenBackground) {
+      wrapper.classList.add("fullscreen-background");
+    } else if (!isFullscreenRegion) {
       if (this.config.showWidth) wrapper.style.width = this.config.showWidth + "px";
       if (this.config.showHeight) wrapper.style.height = this.config.showHeight + "px";
     }

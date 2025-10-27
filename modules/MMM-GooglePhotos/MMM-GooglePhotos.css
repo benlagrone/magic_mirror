@@ -106,3 +106,35 @@
   font-size:14px;
   margin-top:4px;
 }
+
+#GPHOTO.fullscreen-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: -2;
+}
+
+#GPHOTO.fullscreen-background #GPHOTO_BACK,
+#GPHOTO.fullscreen-background #GPHOTO_CURRENT {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+#GPHOTO.fullscreen-background #GPHOTO_CURRENT {
+  background-size: cover;
+}
+
+#GPHOTO.fullscreen-background #GPHOTO_INFO {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  bottom: auto;
+  left: auto;
+  z-index: 2;
+  pointer-events: none;
+}
