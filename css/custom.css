@@ -5,10 +5,15 @@ html {
 
 /* Brighten text and add a subtle shadow against photos */
 body,
+.region,
 .module,
-.module * {
-  color: #f5f5f5;
-  text-shadow: 0 0 12px rgba(0, 0, 0, 0.55);
+.module *,
+.bright,
+.light,
+.normal,
+.dimmed {
+  color: #f8f8f8 !important;
+  text-shadow: 0 0 16px rgba(0, 0, 0, 0.7) !important;
 }
 
 /* Soft translucent background behind each module for legibility */
@@ -26,7 +31,7 @@ body::before {
 }
 
 .module {
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.38);
   border-radius: 16px;
   padding: 12px 18px;
 }

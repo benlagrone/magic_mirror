@@ -47,7 +47,7 @@ Module.register("MMM-SolomonicPrayerClock", {
   },
 
   getStyles() {
-    return ["assets/styles.css"];
+    return [this.file("assets/styles.css")];
   },
 
   socketNotificationReceived(notification, payload) {
