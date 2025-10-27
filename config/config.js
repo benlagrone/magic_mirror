@@ -116,7 +116,7 @@ let config = {
     {
       module: "MMM-SolarPicture",
       position: "top_center",
-      classes: "page-0",
+      classes: "page-1",
       config: {
         imageType: "AIA 304",
         updateInterval: 60 * 60 * 1000,
