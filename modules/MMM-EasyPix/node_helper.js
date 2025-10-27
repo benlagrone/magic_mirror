@@ -150,11 +150,19 @@ module.exports = NodeHelper.create({
       }
 
       const requestedPath = req.params.filePath || "";
+      console.log(`[MMM-EasyPix] HTTP request for '${requestedPath}'`);
       const safeRelative = path.normalize(requestedPath).replace(/^(\.\.(\/|\\|$))+/g, "");
       const absolutePath = path.join(instance.directory, safeRelative);
 
       if (!absolutePath.startsWith(instance.directory)) {
+        console.error(`[MMM-EasyPix] Rejected path outside album: ${absolutePath}`);
         res.status(400).send("Invalid path");
+        return;
+      }
+
+      if (!fs.existsSync(absolutePath)) {
+        console.error(`[MMM-EasyPix] File not found on disk: ${absolutePath}`);
+        res.status(404).send("Not found");
         return;
       }
 
